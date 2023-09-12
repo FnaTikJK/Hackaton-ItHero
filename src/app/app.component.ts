@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {SocketService} from "./shared/socket.service";
+import {SocketService} from "./shared/services/socket.service";
 
 @Component({
   selector: 'app-root',

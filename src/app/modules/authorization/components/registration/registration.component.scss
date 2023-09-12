@@ -1,0 +1,10 @@
+.wrapper{
+  text-align: center;
+  margin: 30vh auto;
+  width: 30vw;
+  &__form{
+    display: flex;
+    width: 30vw;
+    flex-direction: column;
+  }
+}
