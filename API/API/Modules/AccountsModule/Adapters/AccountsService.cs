@@ -23,33 +23,33 @@ namespace API.Modules.AccountsModule.Adapters
             this.mapper = mapper;
         }
 
-        public async Task<Result<ClaimsIdentity>> RegisterAsync(RegisterRequest registerRequest)
+        public async Task<Result<(ClaimsIdentity credentials, AccountRole role)>> RegisterAsync(RegisterRequest registerRequest)
         {
             var cur = await dataContext.Accounts.FirstOrDefaultAsync(account => account.Login == registerRequest.Login);
             if (cur != null)
-                return Result.Fail<ClaimsIdentity>("Такой пользователь уже существует.");
+                return Result.Fail<(ClaimsIdentity credentials, AccountRole role)>("Такой пользователь уже существует.");
 
             await dataContext.Accounts.AddAsync(mapper.Map<Account>(registerRequest));
             await dataContext.SaveChangesAsync();
             return await LoginAsync(mapper.Map<LoginRequest>(registerRequest));
         }
 
-        public async Task<Result<ClaimsIdentity>> LoginAsync(LoginRequest loginRequest)
+        public async Task<Result<(ClaimsIdentity credentials, AccountRole role)>> LoginAsync(LoginRequest loginRequest)
         {
             var cur = await dataContext.Accounts.FirstOrDefaultAsync(account => account.Login == loginRequest.Login);
             if (cur == null)
-                return Result.Fail<ClaimsIdentity>("Такого пользователя не существует.");
+                return Result.Fail<(ClaimsIdentity credentials, AccountRole role)>("Такого пользователя не существует.");
 
             var isPasswordValid = passwordHasher.IsPasswordEqualHashed(cur.PasswordHash, loginRequest.Password);
             if (!isPasswordValid)
-                return Result.Fail<ClaimsIdentity>("Неправильный пароль.");
+                return Result.Fail<(ClaimsIdentity credentials, AccountRole role)>("Неправильный пароль.");
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, cur.Id.ToString()),
                 new Claim(ClaimTypes.Role, cur.Role.ToString()),
             };
-            return Result.Ok(new ClaimsIdentity(claims, "Cookies"));
+            return Result.Ok((new ClaimsIdentity(claims, "Cookies"), cur.Role));
         }
     }
 }
