@@ -10,7 +10,7 @@ namespace API.Modules.AccountsModule.Mapping
         public AccountsMappingProfile()
         {
             CreateMap<RegisterRequest, LoginRequest>();
-            CreateMap<RegisterRequest, Account>()
+            CreateMap<RegisterRequest, AccountEntity>()
                 .ForMember(dest => dest.PasswordHash,
                     opt => opt.ConvertUsing<PasswordConverter, string>(src => src.Password));
         }

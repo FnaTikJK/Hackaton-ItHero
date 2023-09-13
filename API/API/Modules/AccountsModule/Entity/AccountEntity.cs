@@ -2,7 +2,7 @@
 
 namespace API.Modules.AccountsModule.Entity
 {
-    public class Account
+    public class AccountEntity
     {
         [Key]
         public Guid Id { get; set; }

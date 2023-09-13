@@ -5,6 +5,7 @@ using System.Security.Claims;
 using API.Modules.AccountsModule.Entity;
 using API.Modules.AccountsModule.Ports;
 using API.Modules.AccountsModule.Requests;
+using API.Modules.ProfilesModule.Ports;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Modules.AccountsModule.Adapters
@@ -29,7 +30,8 @@ namespace API.Modules.AccountsModule.Adapters
             if (cur != null)
                 return Result.Fail<(ClaimsIdentity credentials, AccountRole role)>("Такой пользователь уже существует.");
 
-            await dataContext.Accounts.AddAsync(mapper.Map<Account>(registerRequest));
+            var accountEntity = mapper.Map<AccountEntity>(registerRequest);
+            await dataContext.Accounts.AddAsync(accountEntity);
             await dataContext.SaveChangesAsync();
             return await LoginAsync(mapper.Map<LoginRequest>(registerRequest));
         }
