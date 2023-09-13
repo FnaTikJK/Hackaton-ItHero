@@ -36,7 +36,7 @@
               </button>
             </mat-chip-row>
           </mat-chip-grid>
-          <input #specInput placeholder="New Fruit..." [formControl]="specializationInput"
+          <input #specInput [formControl]="specializationInput"
                  [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                  [matChipInputSeparatorKeyCodes]="[]">
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addSpecialization($event.option.value, specializations); specInput.value = ''">
@@ -47,6 +47,14 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: thirdStep.controls.phoneNumber, type: 'text', label: 'Контактный телефон'}"></ng-container>
+        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: thirdStep.controls.email, type: 'text', label: 'Почта'}"></ng-container>
+        <section class="wrapper__form-files">
+          <h2>Документы</h2>
+          <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.sparcFile, label: 'Справка СПАРК-РИСКИ'}"></ng-container>
+          <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.registrationFile, label: 'Свидетельство о регистрации'}"></ng-container>
+          <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.egrulFile, label: 'Выписка ЕГРЮЛ'}"></ng-container>
+        </section>
       </form>
       <button mat-button matStepperPrevious>Previous</button>
     </mat-step>
@@ -70,4 +78,10 @@
       <mat-option *ngFor="let opt of options"></mat-option>
     </mat-select>
   </mat-form-field>
+</ng-template>
+
+<ng-template #fileControlTemplate let-control let-extension = "extension" let-label = "label">
+  <p>{{label}}</p>
+  <img src="/assets/img/default/upload.png">
+  <input [formControl]="control" type="file">
 </ng-template>

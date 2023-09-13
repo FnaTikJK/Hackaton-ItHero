@@ -6,5 +6,9 @@
     display: flex;
     width: 30vw;
     flex-direction: column;
+    &-files{
+      display: flex;
+
+    }
   }
 }

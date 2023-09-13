@@ -49,12 +49,18 @@ export class RegistrationComponent implements OnInit{
 
   thirdStep = new FormGroup({
     INN: new FormControl('',
-      [Validators.required, Validators.pattern('\d+')]),
+      [Validators.required, Validators.pattern('^\\d+$')]),
     companyName: new FormControl('',
       [Validators.required]),
-    specialization: new FormControl<ISpecialization[]>([]),
+    specialization: new FormControl<ISpecialization[]>([], [Validators.required]),
     credentials: new FormControl('',
-      [Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')])
+      [Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
+    phoneNumber: new FormControl('',
+      [Validators.required]),
+    email: new FormControl(''),
+    sparcFile: new FormControl(null, [Validators.required]),
+    registrationFile: new FormControl(null, [Validators.required]),
+    egrulFile: new FormControl(null, [Validators.required]),
   });
 
   protected form = new FormGroup({
