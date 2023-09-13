@@ -1,0 +1,8 @@
+
+@mixin mat-stepper() {
+  .mat-horizontal-content-container {
+    margin-top: 10px;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+}
