@@ -1,4 +1,4 @@
-﻿using API.DAL;
+using API.DAL;
 using API.Infrastructure;
 using AutoMapper;
 using System.Security.Claims;

@@ -1,4 +1,4 @@
-﻿using API.DAL;
+using API.DAL;
 using API.Infrastructure;
 using API.Modules.ProfilesModule.DTO;
 using API.Modules.ProfilesModule.Entity;
@@ -16,12 +16,6 @@ namespace API.Modules.ProfilesModule.Adapters
         {
             this.mapper = mapper;
             this.dataContexxt = dataContext;
-        }
-        public async Task<Result<bool>> CreateProfileAsync(Guid profileId)
-        {
-            await dataContexxt.AddAsync(new ProfileEntity {Id = profileId});
-            await dataContexxt.SaveChangesAsync();
-            return Result.Ok(true);
         }
 
         public async Task<Result<ProfileOutDTO>> GetProfileAsync(Guid userId)

@@ -1,4 +1,4 @@
-﻿using API.Infrastructure;
+using API.Infrastructure;
 using API.Modules.ProfilesModule.DTO;
 using API.Modules.ProfilesModule.Ports;
 using AutoMapper;
@@ -22,10 +22,7 @@ namespace API.Modules.ProfilesModule
         [Authorize]
         public async Task<ActionResult<ProfileOutDTO>> GetMyProfile()
         {
-            var response = await profilesService.GetProfileAsync(User.GetId());
-
-            return response.IsSuccess ? Ok(response.Value) 
-                : BadRequest(response.Error);
+            return await GetProfileAsync(User.GetId());
         }
 
         [HttpGet("{id}")]
