@@ -1,0 +1,17 @@
+.wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  height: 100vh;
+  margin: 0 auto;
+  &__title{
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  &__form{
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+  }
+}

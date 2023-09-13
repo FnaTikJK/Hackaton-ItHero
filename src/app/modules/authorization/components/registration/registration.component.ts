@@ -9,6 +9,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, filter, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {CompanyEntitiesService, ISpecialization} from "../../../../shared/services/company-entities.service";
+import {AuthorizationService, IRegistrationCredentials} from "../../../../shared/services/authorization.service";
+import {MatStepper} from "@angular/material/stepper";
+import {IProfileData, ProfileService} from "../../../../shared/services/profile.service";
 
 @Component({
   selector: 'app-registration',
@@ -21,21 +24,26 @@ export class RegistrationComponent implements OnInit{
   protected specializations$ = this.companyEntitiesS.specializations$;
   protected specializationInput = new FormControl('');
   protected specializationNameFilter$ = new BehaviorSubject('');
+
+  protected roles$ = this.companyEntitiesS.roles$;
   constructor(
     private destroyRef: DestroyRef,
     private companyEntitiesS: CompanyEntitiesService,
+    private authS: AuthorizationService,
+    private profileS: ProfileService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   firstStep = new FormGroup({
-    email: new FormControl('',
+    login: new FormControl('',
     [Validators.required, Validators.minLength(3), Validators.maxLength(15)]),
     password: new FormControl('',
     [Validators.required, Validators.minLength(3), Validators.maxLength(15),
     Validators.pattern('^[a-zA-Z0-9]+$')]),
     repeatPassword: new FormControl('',
-    [Validators.required, Validators.minLength(3), Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')])
+    [Validators.required, Validators.minLength(3), Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]),
+    role: new FormControl('', [Validators.required])
 });
 
   secondStep = new FormGroup({
@@ -44,23 +52,25 @@ export class RegistrationComponent implements OnInit{
     surname: new FormControl('',
       [Validators.required, Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
     patronic: new FormControl('',
-      [Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')])
+      [Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
+    specialization: new FormControl<ISpecialization[]>([], [Validators.required]),
+    phoneNumber: new FormControl('',
+      [Validators.required]),
+    email: new FormControl(''),
   });
 
   thirdStep = new FormGroup({
     INN: new FormControl('',
       [Validators.required, Validators.pattern('^\\d+$')]),
+    KPP: new FormControl('',
+      [Validators.required, Validators.pattern('^\\d+$')]),
     companyName: new FormControl('',
       [Validators.required]),
-    specialization: new FormControl<ISpecialization[]>([], [Validators.required]),
     credentials: new FormControl('',
       [Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
-    phoneNumber: new FormControl('',
-      [Validators.required]),
-    email: new FormControl(''),
-    sparcFile: new FormControl(null, [Validators.required]),
-    registrationFile: new FormControl(null, [Validators.required]),
-    egrulFile: new FormControl(null, [Validators.required]),
+    sparcFile: new FormControl<File>(null as unknown as File, [Validators.required]),
+    registrationFile: new FormControl<File>(null as unknown as File, [Validators.required]),
+    egrulFile: new FormControl<File>(null as unknown as File, [Validators.required]),
   });
 
   protected form = new FormGroup({
@@ -110,18 +120,28 @@ export class RegistrationComponent implements OnInit{
 
   protected addSpecialization(specializationID: number, specializations: ISpecialization[] | null){
     //@ts-ignore
-    this.thirdStep.controls.specialization.setValue([...this.thirdStep.controls.specialization.value,
+    this.secondStep.controls.specialization.setValue([...this.secondStep.controls.specialization.value,
       specializations?.find(s => s.ID === specializationID)]);
     this.specializationInput.setValue('');
   }
   protected removeSpecialization(specializationID: number){
-    this.thirdStep.controls.specialization.setValue([...(this.thirdStep.controls.specialization.value?.filter(spec =>
+    this.secondStep.controls.specialization.setValue([...(this.secondStep.controls.specialization.value?.filter(spec =>
       spec.ID !== specializationID) ?? [])])
   }
 
-  protected registrate() {
-    // this.authS.registrate({login: this.form.controls['login'].value as string, password: this.form.controls['password'].value as string});
-    // this.router.navigate(['../', 'login'], {relativeTo: this.route});
+  protected registrate$(stepper: MatStepper) {
+    const regCredentials = {...this.firstStep.value};
+    delete regCredentials.repeatPassword;
+    this.authS.registrate$(regCredentials as unknown as IRegistrationCredentials)
+      .subscribe(() => stepper.next());
   }
 
+  protected createProfile$(stepper: MatStepper) {
+    const profileData = {
+      ...this.secondStep.value,
+        specialization: this.secondStep.value.specialization?.map(s => s.ID)
+    };
+    this.profileS.createProfile$(profileData as IProfileData)
+      .subscribe(() => stepper.next());
+  }
 }

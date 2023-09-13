@@ -14,6 +14,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {NgLetDirective} from "../../shared/directives/ng-let.directive";
 import { SpecializationFilterPipe } from './pipes/specialization-filter.pipe';
+import {FileValueAccessorComponent} from "../../shared/components/file-value-accessor/file-value-accessor.component";
 
 
 const routes: Routes = [
@@ -40,7 +41,8 @@ const routes: Routes = [
     MatChipsModule,
     MatIconModule,
     MatAutocompleteModule,
-    NgLetDirective
+    NgLetDirective,
+    FileValueAccessorComponent
   ]
 })
 export class AuthorizationModule { }

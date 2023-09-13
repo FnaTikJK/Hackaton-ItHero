@@ -3,5 +3,5 @@
 
 @include mat-stepper();
 
-html, body { height: 100%; }
+html, body { height: 100%; padding-top: 0.1px;  }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

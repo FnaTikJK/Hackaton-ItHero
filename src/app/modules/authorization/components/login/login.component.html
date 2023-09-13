@@ -1,1 +1,14 @@
-<a routerLink="../registration">Рега</a>
+<div class="wrapper">
+  <form [formGroup]="form" class="wrapper__form">
+    <h1 class="wrapper__title">Агрегатор</h1>
+    <mat-form-field appearance="outline">
+        <mat-label>Логин</mat-label>
+        <input [formControl]="form.controls.login" matInput>
+      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Пароль</mat-label>
+      <input [formControl]="form.controls.password" matInput [type]="'password'">
+    </mat-form-field>
+    <button mat-flat-button color="primary" [disabled] = "form.invalid" (click) = "login$()">Войти</button>
+  </form>
+</div>

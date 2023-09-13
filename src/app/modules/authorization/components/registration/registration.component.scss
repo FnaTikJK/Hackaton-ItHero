@@ -1,14 +1,47 @@
 .wrapper{
-  text-align: center;
-  margin: 30vh auto;
-  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
   &__form{
     display: flex;
     width: 30vw;
     flex-direction: column;
     &-files{
+      width: 700px;
+      position: relative;
+      right: 60px;
       display: flex;
-
+      flex-direction: column;
     }
   }
+}
+
+.fileWrapper{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.fileUploader{
+  display: none;
+}
+
+.nextBtn{
+  align-self: center;
+  position: relative;
+  bottom: 10px;
+}
+
+.saveBtn{
+  align-self: center;
+}
+
+:host ::ng-deep .mat-horizontal-content-container{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
 }

@@ -1,0 +1,23 @@
+.navigation{
+  display: flex;
+  height: 30px;
+  justify-content: flex-end;
+  gap: 30px;
+  background-color: #495464;
+  position: fixed;
+  width: 100%;
+  align-items: center;
+  &__authorization{
+    padding-right: 20px;
+    a:first-child{
+      margin-right: 20px;
+    }
+  }
+  &__link{
+    color: darkgrey;
+    text-decoration: none;
+  }
+  &__activated{
+    color: #FFF;
+  }
+}

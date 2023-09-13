@@ -1,0 +1,11 @@
+<div class="file__wrapper">
+  <h3>{{label}}</h3>
+  <img [src]="'/assets/img/default/' + (fileUploader.files?.length ? 'file' : 'upload') + '.png'"
+       (click)="fileUploader.click()"
+       [width]="fileUploader.files?.length ? 200 : 295" height="184"
+  >
+  <input style="display: none" #fileUploader type="file" (change)="emitValue($event)">
+  <p style="color: gray" [ngStyle]="{visibility: fileUploader.files?.length ? 'visible' : 'hidden'}">
+    {{fileUploader.files?.item(0)?.name}}</p>
+  <button mat-flat-button color="primary" (click)="fileUploader.click();">Загрузить файл</button>
+</div>
