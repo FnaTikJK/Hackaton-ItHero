@@ -43,7 +43,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    //options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     options.JsonSerializerOptions.Converters.Add(new JsonConfig.DateOnlyJsonConverter());
 });
 

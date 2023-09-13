@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using API.Modules.AccountsModule.Entity;
 
 namespace API.Modules.AccountsModule
 {
@@ -21,29 +22,29 @@ namespace API.Modules.AccountsModule
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult> RegisterAsync([FromBody] RegisterRequest registerRequest)
+        public async Task<ActionResult<LoginResponse>> RegisterAsync([FromBody] RegisterRequest registerRequest)
         {
             var response = await accountsService.RegisterAsync(registerRequest);
             if (!response.IsSuccess)
                 return BadRequest(response.Error);
 
-            var principal = new ClaimsPrincipal(response.Value);
+            var principal = new ClaimsPrincipal(response.Value.credentials);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return NoContent();
+            return Ok(new LoginResponse{ Role = response.Value.role });
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult> LoginAsync([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<LoginResponse>> LoginAsync([FromBody] LoginRequest loginRequest)
         {
             var response = await accountsService.LoginAsync(loginRequest);
             if (!response.IsSuccess)
                 return BadRequest(response.Error);
 
-            var principal = new ClaimsPrincipal(response.Value);
+            var principal = new ClaimsPrincipal(response.Value.credentials);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return NoContent();
+            return Ok(new LoginResponse { Role = response.Value.role });
         }
 
         [HttpPost("Logout")]
@@ -52,6 +53,15 @@ namespace API.Modules.AccountsModule
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return NoContent();
+        }
+
+        [HttpGet("Roles")]
+        public ActionResult<Dictionary<int, string>> GetRolesById()
+        {
+            return Ok(Enum.GetValues(typeof(AccountRole))
+                .Cast<AccountRole>()
+                .ToDictionary(r => (int)r, 
+                    r => r.ToString()));
         }
     }
 }
