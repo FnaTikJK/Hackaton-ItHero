@@ -17,8 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\SearchModule\Adapters\" />
-    <Folder Include="Modules\SearchModule\Ports\" />
     <Folder Include="Modules\StaticsModule\Files\Documents\" />
     <Folder Include="Modules\StaticsModule\Files\Photos\" />
   </ItemGroup>
