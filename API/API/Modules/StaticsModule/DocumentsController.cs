@@ -13,7 +13,7 @@ public class DocumentsController : ControllerBase
   private const string Registration = "Registration";
   private const string Egrul = "Egrul";
 
-  [HttpGet]
+  [HttpGet("My")]
   [Authorize]
   public async Task GetMyDocuments()
   {
@@ -30,37 +30,29 @@ public class DocumentsController : ControllerBase
     await HttpContext.Response.SendFileAsync($"{PathToDocuments}/{Egrul}__{id}.doc");
   }
 
-  [HttpPost("Spark")]
+  [HttpPost("My")]
   [Authorize]
-  public async Task<ActionResult> UpdateSpark()
-  {
-    var id = User.GetId();
-    var file = Request.Form.Files.First();
-    var path = $"{PathToDocuments}.{Spark}__{id}.doc";
-    await using var fileStream = new FileStream(path, FileMode.Create);
-    await file.CopyToAsync(fileStream);
-
-    return NoContent();
-  }
-
-  /*[HttpPost("Spark")]
-  [Authorize]
-  public async Task<ActionResult> UpdateSpark()
+  public async Task<ActionResult> UpdateFilesAsync()
   {
     var id = User.GetId();
     var files = Request.Form.Files;
     foreach (var file in files)
     {
+      if (file.ContentType != "application/msword")
+        return BadRequest("Only .doc allowed");
       var path = file.Name switch
       {
-        $"{Spark}.doc" => $"{PathToDocuments}.{Spark}__{id}.doc",
-        $"{Registration}.doc" => $"{PathToDocuments}.{Spark}__{id}.doc",
-        $"{Egrul}.doc" => $"{PathToDocuments}.{Spark}__{id}.doc",
-        _ => throw new ArgumentException("Некорректное название файла")
+        $"{Spark}" => $"{PathToDocuments}/{Spark}{id}.doc",
+        $"{Registration}" => $"{PathToDocuments}/{Registration}{id}.doc",
+        $"{Egrul}" => $"{PathToDocuments}/{Egrul}__{id}.doc",
+        _ => ""
       };
+      if (path == "")
+        return BadRequest("Неправильное имя файла(должен быть с .doc)");
+
       await using var fileStream = new FileStream(path, FileMode.Create);
       await file.CopyToAsync(fileStream);
     }
-    return Ok();
-  }*/
+    return NoContent();
+  }
 }
