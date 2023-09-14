@@ -11,5 +11,7 @@ namespace API.Modules.CompaniesModule.Ports
     public Task<Result<bool>> JoinCompanyAsync(Guid companyId, Guid userId);
     public Task<Result<bool>> LeaveCompanyAsync(Guid companyId, Guid userId);
     public Task<Result<bool>> ChangeOwner(Guid companyId, Guid oldOwnerId, Guid newOwnerId);
+    public Task<Result<Guid>> GetCompanyIdByUserId(Guid userId);
+    public Task<Result<bool>> IsUserIsOwner(Guid companyId, Guid userId);
   }
 }

@@ -5,6 +5,7 @@ using API.Modules.CompaniesModule.Entity;
 using API.Modules.CompaniesModule.Ports;
 using API.Modules.ProfilesModule.Entity;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Modules.CompaniesModule.Adapters
 {
@@ -27,6 +28,10 @@ namespace API.Modules.CompaniesModule.Adapters
 
     public async Task<Result<Guid>> CreateCompanyAsync(Guid ownerId, CompanyInnerDTO companyInner)
     {
+      var cur = await GetCompanyIdByUserId(ownerId);
+      if (cur.IsSuccess)
+        return Result.Fail<Guid>("Вы уже состоите в компании");
+
       var company = mapper.Map<CompanyEntity>(companyInner);
       var profile = await dataContext.Profiles.FindAsync(ownerId);
       if (profile == null)
@@ -109,6 +114,29 @@ namespace API.Modules.CompaniesModule.Adapters
 
       cur.OwnerId = newOwnerId;
       await dataContext.SaveChangesAsync();
+      return Result.Ok(true);
+    }
+
+    public async Task<Result<Guid>> GetCompanyIdByUserId(Guid userId)
+    {
+      var company = await dataContext.Companies
+        .FirstOrDefaultAsync(c => c.Workers.Any(w => w.Id == userId));
+      if (company == null)
+        return Result.Fail<Guid>("Пользователь не состоит ни в какой компании");
+
+      return Result.Ok(company.Id);
+    }
+
+    public async Task<Result<bool>> IsUserIsOwner(Guid companyId, Guid userId)
+    {
+      var company = await dataContext.Companies
+        .FirstOrDefaultAsync(c => c.OwnerId == userId);
+      if (company == null)
+        return Result.Fail<bool>("Пользователь не состоит ни в какой компании");
+
+      if (company.OwnerId != userId)
+        return Result.Fail<bool>("У вас нет прав");
+
       return Result.Ok(true);
     }
   }
