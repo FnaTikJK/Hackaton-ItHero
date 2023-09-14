@@ -18,8 +18,8 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {CompanyEntitiesService, ISpecialization} from "../../../../shared/services/entities/company-entities.service";
 import {AuthorizationService, IRegistrationCredentials} from "../../../../shared/services/authorization.service";
 import {MatStepper} from "@angular/material/stepper";
-import {IProfileData, ProfileService} from "../../../../shared/services/entities/profile.service";
-import {CompanyService, ICompany} from "../../../../shared/services/entities/company.service";
+import {IProfileData, IProfileDataDTO, ProfileService} from "../../../../shared/services/entities/profile.service";
+import {CompanyService, ICompanyDTO} from "../../../../shared/services/entities/company.service";
 import {HttpService} from "../../../../shared/services/http.service";
 
 @Component({
@@ -58,16 +58,17 @@ export class RegistrationComponent implements OnInit{
 });
 
   secondStep = new FormGroup({
-    name: new FormControl('',
+    firstName: new FormControl('',
       [Validators.required, Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
-    surname: new FormControl('',
+    secondName: new FormControl('',
       [Validators.required, Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
-    patronic: new FormControl('',
+    thirdName: new FormControl('',
       [Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
     specialization: new FormControl<ISpecialization[]>([], [Validators.required]),
     phoneNumber: new FormControl('',
       [Validators.required]),
     email: new FormControl(''),
+    company: new FormControl<string>('')
   });
 
   thirdStep = new FormGroup({
@@ -132,12 +133,12 @@ export class RegistrationComponent implements OnInit{
   protected addSpecialization(specializationID: number, specializations: ISpecialization[] | null){
     //@ts-ignore
     this.secondStep.controls.specialization.setValue([...this.secondStep.controls.specialization.value,
-      specializations?.find(s => s.ID === specializationID)]);
+      specializations?.find(s => s.id === specializationID)]);
     this.specializationInput.setValue('');
   }
   protected removeSpecialization(specializationID: number){
     this.secondStep.controls.specialization.setValue([...(this.secondStep.controls.specialization.value?.filter(spec =>
-      spec.ID !== specializationID) ?? [])])
+      spec.id !== specializationID) ?? [])])
   }
 
   protected registrate$(stepper: MatStepper) {
@@ -150,9 +151,9 @@ export class RegistrationComponent implements OnInit{
   protected createProfile$(stepper: MatStepper) {
     const profileData = {
       ...this.secondStep.value,
-        specialization: this.secondStep.value.specialization?.map(s => s.ID)
+        specialization: this.secondStep.value.specialization?.map(s => s.id)
     };
-    this.profileS.createProfile$(profileData as IProfileData)
+    this.profileS.createProfile$(profileData as IProfileDataDTO)
       .subscribe(() => stepper.next());
   }
 

@@ -27,29 +27,17 @@ export class CompanyEntitiesService {
         }
 
   getSpecializations$() {
-    return this._specializations$.value ? of(this._specializations$.value) : this.httpS.get<ISpecialization[]>('specializations')
+    return this._specializations$.value ? of(this._specializations$.value) : this.httpS.get<ISpecialization[]>('Specializations')
       .pipe(
         map(specs => {
           this._specializations$.next(specs);
           return specs;
         }))
   }
-
-  private initSpecializations() {
-    this.httpS.get<ISpecialization[]>('specializations')
-      .pipe(
-        catchError(err => of([
-          {ID: 1, name: 'Сельхоз'},
-          {ID: 2, name: 'Дрель-работы'},
-          {ID: 3, name: 'Кокк'}
-        ]))
-      )
-      .subscribe(specs => this._specializations$.next(specs))
-  }
 }
 
 export interface ISpecialization {
-  ID: number;
+  id: number;
   name: string;
 }
 

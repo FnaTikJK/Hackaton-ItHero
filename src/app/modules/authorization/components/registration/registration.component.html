@@ -17,13 +17,13 @@
     <mat-step [stepControl]="form.controls.secondStep">
       <ng-template matStepLabel>Персональные данные</ng-template>
       <form  class="wrapper__form" [formGroup]="form.controls.secondStep">
-        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.name, type: 'text', label: 'Имя'}"></ng-container>
-        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.surname, type: 'text', label: 'Фамилия'}"></ng-container>
-        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.patronic, type: 'text', label: 'Отчество'}"></ng-container>
+        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.firstName, type: 'text', label: 'Имя'}"></ng-container>
+        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.secondName, type: 'text', label: 'Фамилия'}"></ng-container>
+        <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.thirdName, type: 'text', label: 'Отчество'}"></ng-container>
         <mat-form-field *ngLet="specializations$ | async as specializations" [appearance]="'outline'">
           <mat-label>Специализация</mat-label>
           <mat-chip-grid #chipGrid>
-            <mat-chip-row *ngFor="let specialization of secondStep.controls.specialization.value" (removed)="removeSpecialization(specialization.ID)">
+            <mat-chip-row *ngFor="let specialization of secondStep.controls.specialization.value" (removed)="removeSpecialization(specialization.id)">
               {{specialization.name}}
               <button matChipRemove [attr.aria-label]="'remove ' + specialization.name">
                 <mat-icon>cancel</mat-icon>
@@ -36,7 +36,7 @@
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addSpecialization($event.option.value, specializations); specInput.value = ''">
             <mat-option
               *ngFor="let specialization of (specializations | specializationFilter : secondStep.controls.specialization.value : specializationNameFilter$) | async"
-              [value]="specialization.ID">
+              [value]="specialization.id">
               {{specialization.name}}
             </mat-option>
           </mat-autocomplete>
