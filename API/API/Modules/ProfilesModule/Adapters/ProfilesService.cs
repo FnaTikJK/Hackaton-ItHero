@@ -42,6 +42,7 @@ namespace API.Modules.ProfilesModule.Adapters
             {
                 var profileEntity = mapper.Map<ProfileEntity>(profileInner);
                 profileEntity.Id = id;
+                profileEntity.Account = await dataContexxt.Accounts.FindAsync(id);
                 await dataContexxt.Profiles.AddAsync(profileEntity);
             }
 
