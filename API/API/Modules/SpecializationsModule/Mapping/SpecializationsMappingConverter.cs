@@ -43,4 +43,19 @@ public class SpecializationsMappingConverter :
       ? null
       : result;
   }
+
+  public HashSet<SpecializationEntity>? Convert(HashSet<SpecializationOutDTO>? sourceMember, ResolutionContext context)
+  {
+    if (sourceMember == null)
+      return null;
+
+    var result =  sourceMember
+      .Select(guid => dataContext.Specializations.Find(guid))
+      .Where(spec => spec != null)
+      .Cast<SpecializationEntity>()
+      .ToHashSet();
+    return result.Count == 0
+      ? null
+      : result;
+  }
 }

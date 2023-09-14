@@ -10,7 +10,7 @@ public sealed class ApplicationEntity
   public Guid OwnerId { get; set; }
   public string? Title { get; set; }
   public decimal? Budget { get; set; }
-  public long? CompletionTime { get; set; }
+  public DateTime? ExpiryAt { get; set; }
   public string? Text { get; set; }
 
   public HashSet<ProfileEntity>? SuggestedExecutors { get; set; }
