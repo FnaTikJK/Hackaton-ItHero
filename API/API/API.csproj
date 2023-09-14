@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Modules\StaticsModule\Files\Documents\" />
     <Folder Include="Modules\StaticsModule\Files\Photos\" />
   </ItemGroup>
 
