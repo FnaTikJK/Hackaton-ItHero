@@ -33,16 +33,25 @@ public class ChatsController : ControllerBase
 
   [HttpPost]
   [Authorize]
-  public ActionResult CreateChat(Guid companionId)
+  public ActionResult CreateChat(CreateChatRequest createChatRequest)
   {
-    return Ok(new { Id = chatsService.CreateChat(User.GetId(), companionId) });
+    return Ok(new { Id = chatsService.CreateChat(User.GetId(), createChatRequest.CompanionId) });
+  }
+  public class CreateChatRequest
+  {
+    public Guid CompanionId { get; set; }
   }
 
   [HttpPost("{chatId}")]
   [Authorize]
-  public ActionResult SendMessage(Guid chatId, string message)
+  public ActionResult SendMessage(Guid chatId, SendMessageRequest sendMessageRequest)
   {
-    chatsService.SendMessage(chatId, User.GetId(), message);
+    chatsService.SendMessage(chatId, User.GetId(), sendMessageRequest.Message);
     return NoContent();
+  }
+
+  public class SendMessageRequest
+  {
+    public string Message { get; set; }
   }
 }

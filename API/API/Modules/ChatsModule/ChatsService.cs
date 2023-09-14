@@ -38,7 +38,6 @@ public class ChatsService
     var sent = messages.Where(m => m.Sender.Id == curUserId).ToList();
     var received = messages.Where(m => m.Sender.Id != curUserId).ToList();
 
-    var setMapped = mapper.Map<IEnumerable<ChatMessageDTO>>(sent);
      return (sent: mapper.Map<IEnumerable<ChatMessageDTO>>(sent),
       received: mapper.Map<IEnumerable<ChatMessageDTO>>(received));
   }
@@ -46,11 +45,11 @@ public class ChatsService
   public Guid CreateChat(Guid firstUserId, Guid secondUserId)
   {
     var cur = dataContext.Chats
-      .Any(c =>
+      .FirstOrDefault(c =>
         c.Users.Any(u => u.Id == firstUserId)
         && c.Users.Any(u => u.Id == secondUserId));
-    if (cur)
-      throw new Exception("Chat already exists");
+    if (cur != null)
+      return cur.Id;
 
     var firstUser = dataContext.Profiles.Find(firstUserId);
     var secondUser = dataContext.Profiles.Find(secondUserId);
