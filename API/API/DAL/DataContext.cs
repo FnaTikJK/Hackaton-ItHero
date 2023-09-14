@@ -1,4 +1,5 @@
 using API.Modules.AccountsModule.Entity;
+using API.Modules.ApplicationsModule.Entity;
 using API.Modules.CompaniesModule.Entity;
 using API.Modules.ProfilesModule.Entity;
 using API.Modules.SpecializationsModule.Entity;
@@ -27,6 +28,7 @@ namespace API.DAL
         public DbSet<AccountEntity> Accounts => Set<AccountEntity>();
         public DbSet<ProfileEntity> Profiles => Set<ProfileEntity>();
         public DbSet<CompanyEntity> Companies => Set<CompanyEntity>();
+        public DbSet<ApplicationEntity> Applications => Set<ApplicationEntity>();
         public DbSet<SpecializationEntity> Specializations => Set<SpecializationEntity>();
     }
 }
