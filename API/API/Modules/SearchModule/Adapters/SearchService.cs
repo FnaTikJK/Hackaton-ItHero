@@ -27,7 +27,10 @@ public class SearchService : ISearchService
     if (searchRequest.Name != null)
       res = res.Where(p => p.SecondName.Contains(searchRequest.Name));
 
-    var profiles = mapper.Map<IEnumerable<ProfileOutDTO>>(res.ToList());
+    var profiles = mapper.Map<IEnumerable<ProfileOutDTO>>(res
+      .Skip(searchRequest.Skip)
+      .Take(searchRequest.Take)
+      .ToList());
     return Result.Ok(new SearchResponseDTO
     {
       TotalCount = profiles.Count(),
