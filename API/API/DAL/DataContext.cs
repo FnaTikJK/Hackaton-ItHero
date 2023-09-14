@@ -1,4 +1,5 @@
 using API.Modules.AccountsModule.Entity;
+using API.Modules.ChatsModule.Entity;
 using API.Modules.CompaniesModule.Entity;
 using API.Modules.ProfilesModule.Entity;
 using API.Modules.SpecializationsModule.Entity;
@@ -10,6 +11,8 @@ namespace API.DAL
     {
         public DataContext(DbContextOptions options) : base(options)
         {
+          AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+          AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
         public void RecreateDatabase()
@@ -28,5 +31,7 @@ namespace API.DAL
         public DbSet<ProfileEntity> Profiles => Set<ProfileEntity>();
         public DbSet<CompanyEntity> Companies => Set<CompanyEntity>();
         public DbSet<SpecializationEntity> Specializations => Set<SpecializationEntity>();
+        public DbSet<ChatEntity> Chats => Set<ChatEntity>();
+        public DbSet<MessageEntity> Messages => Set<MessageEntity>();
     }
 }

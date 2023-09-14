@@ -21,14 +21,18 @@ namespace API.Modules.CompaniesModule.Adapters
     }
     public Result<IEnumerable<CompanyOutDTO>> GetCompanies()
     {
-      var companies = dataContext.Companies.ToList();
+      var companies = dataContext.Companies
+        .Include(c => c.Workers)
+        .ToList();
 
       return Result.Ok(mapper.Map<IEnumerable<CompanyOutDTO>>(companies));
     }
 
     public Result<CompanyOutDTO> GetCompany(Guid id)
     {
-      var company = dataContext.Companies.Find(id);
+      var company = dataContext.Companies
+        .Include(c => c.Workers)
+        .FirstOrDefault(c => c.Id == id);
       if (company == null)
         return Result.Fail<CompanyOutDTO>("Такой компании не существует");
 
