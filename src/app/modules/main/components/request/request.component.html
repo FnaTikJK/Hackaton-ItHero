@@ -1,9 +1,9 @@
 <div class="wrapper" *ngLet="request$ | async as request">
-  <button mat-icon-button (click) = "changeFormState()">
+  <button mat-icon-button (click) = "changeFormState()" style="margin-left: 75%">
     <mat-icon>{{form.disabled ? 'edit' : 'backspace'}}</mat-icon>
   </button>
   <section>
-    <form>
+    <form class="form">
       <ng-container *ngTemplateOutlet = "inputControlTemplate; context: {$implicit: form.controls.name, label: 'Наименование заказа'}"></ng-container>
       <ng-container *ngTemplateOutlet = "selectControlTemplate; context: {$implicit: form.controls.specialization, options: specializations$ | async, multiple: false, label: 'Специализация'}"></ng-container>
       <ng-container *ngTemplateOutlet = "inputControlTemplate; context: {$implicit: form.controls.budget, label: 'Бюджет'}"></ng-container>
@@ -17,9 +17,12 @@
       </div>
       <ng-container *ngTemplateOutlet = "textAreaControlTemplate; context: {$implicit: form.controls.about, label: 'Формулировка задачи'}"></ng-container>
       <ng-container *ngTemplateOutlet = "selectControlTemplate; context: {$implicit: form.controls.linkedProjects, options: requests$ | async,  multiple: true, label: 'Смежные проекты'}"></ng-container>
+      <button *ngIf = "form.enabled" mat-flat-button color = "primary"
+              (click) = "saveChanges()"
+              [disabled] = "form.invalid"
+      >Сохранить</button>
     </form>
   </section>
-  <button *ngIf = "form.enabled" mat-flat-button color = "primary" (click) = "saveChanges()">Сохранить</button>
 </div>
 
 <ng-template #inputControlTemplate let-control let-label = "label">
@@ -35,7 +38,7 @@
   <div>
     <mat-form-field appearance="outline">
       <mat-label>{{label}}</mat-label>
-      <textarea matInput [formControl] = "control"></textarea>
+      <textarea style="resize: none" matInput [formControl] = "control"></textarea>
     </mat-form-field>
   </div>
 </ng-template>

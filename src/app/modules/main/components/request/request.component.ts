@@ -14,7 +14,7 @@ import {CompanyEntitiesService} from "../../../../shared/services/entities/compa
 })
 export class RequestComponent implements OnInit{
 
-  protected requests$ = this.requestsS.requests$;
+  protected requests$ = this.requestsS.get$();
 
   protected request$ = this.route.params
     .pipe(
@@ -26,7 +26,7 @@ export class RequestComponent implements OnInit{
       take(1)
     );
 
-  protected specializations$ = this.companyEntitiesS.specializations$;
+  protected specializations$ = this.companyEntitiesS.getSpecializations$();
 
   protected form = new FormGroup({
     name: new FormControl<string>('', [Validators.required]),
@@ -34,7 +34,7 @@ export class RequestComponent implements OnInit{
     budget: new FormControl<number>(0, [Validators.required]),
     deadline: new FormControl<string>('', [Validators.required]),
     about: new FormControl<string>('', [Validators.required]),
-    linkedProjects: new FormControl<number[]>([], [Validators.required])
+    linkedProjects: new FormControl<number[]>([])
   });
 
   constructor(

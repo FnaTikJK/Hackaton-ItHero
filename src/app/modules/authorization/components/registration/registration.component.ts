@@ -30,11 +30,11 @@ import {HttpService} from "../../../../shared/services/http.service";
 })
 export class RegistrationComponent implements OnInit{
 
-  protected specializations$ = this.companyEntitiesS.specializations$;
+  protected specializations$ = this.companyEntitiesS.getSpecializations$();
   protected specializationInput = new FormControl('');
   protected specializationNameFilter$ = new BehaviorSubject('');
 
-  protected roles$ = this.companyEntitiesS.roles$;
+  protected roles$ = this.companyEntitiesS.getRoles$();
   constructor(
     private destroyRef: DestroyRef,
     private companyEntitiesS: CompanyEntitiesService,

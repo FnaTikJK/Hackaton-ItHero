@@ -14,19 +14,22 @@ import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { RequestComponent } from './components/request/request.component';
+import { ExecutorsComponent } from './components/executors/executors.component';
 
 const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'requests'},
   { path: 'requests', component: RequestsComponent },
   { path: 'requests/:id', component: RequestComponent },
-  { path: 'create-request', component: CreateRequestComponent }
+  { path: 'create-request', component: CreateRequestComponent },
+  { path: 'executors', component: ExecutorsComponent }
 ]
 
 @NgModule({
   declarations: [
     RequestsComponent,
     CreateRequestComponent,
-    RequestComponent
+    RequestComponent,
+    ExecutorsComponent
   ],
   imports: [
     CommonModule,

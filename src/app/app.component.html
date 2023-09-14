@@ -1,8 +1,31 @@
 
 <nav class="navigation">
+  <section class="navigation__main">
+    <a class="navigation__link" routerLinkActive = "navigation__activated" routerLink="/main/executors">Исполнители</a>
+    <a class="navigation__link" routerLinkActive = "navigation__activated" routerLink="/main/requests">Мои запросы</a>
+  </section>
   <section class="navigation__authorization">
     <a class="navigation__link" routerLinkActive = "navigation__activated" routerLink="/authorization/login">Вход</a>
     <a class="navigation__link" routerLinkActive = "navigation__activated"  routerLink="/authorization/registration">Регистрация</a>
+  </section>
+  <section>
+
+      <mat-menu #appMenu="matMenu">
+        <ng-template matMenuContent>
+          <div mat-menu-item>
+            <mat-icon style="font-size: 30px;height: 30px; width: 30px;" [svgIcon]="'profile'"></mat-icon>
+            <button class="transparentBtn">Профиль</button>
+          </div>
+          <button class="exitBtn" mat-menu-item (click) = "signOut$()">Выход</button>
+        </ng-template>
+      </mat-menu>
+
+    <div class="accOptions__wrapper">
+      <span>Аккаунт</span>
+      <button mat-icon-button [matMenuTriggerFor]="appMenu">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+    </div>
   </section>
 </nav>
 <router-outlet></router-outlet>

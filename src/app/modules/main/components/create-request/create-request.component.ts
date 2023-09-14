@@ -18,11 +18,11 @@ export class CreateRequestComponent {
     budget: new FormControl<number>(0, [Validators.required]),
     deadline: new FormControl<string>('', [Validators.required]),
     about: new FormControl<string>('', [Validators.required]),
-    linkedProjects: new FormControl<number[]>([], [Validators.required])
+    linkedProjects: new FormControl<number[]>([])
   });
 
-  protected specializations$ = this.companyEntityS.specializations$;
-  protected requests$ = this.requestsS.requests$;
+  protected specializations$ = this.companyEntityS.getSpecializations$();
+  protected requests$ = this.requestsS.get$();
 
   constructor(
     private companyEntityS: CompanyEntitiesService,
@@ -34,5 +34,9 @@ export class CreateRequestComponent {
   createNewRequest() {
     this.requestsS.createRequest$(this.form.value as IRequest)
       .subscribe((res) => this.router.navigate(['../requests'], {relativeTo: this.route}));
+  }
+
+  returnToRequestsPage() {
+    this.router.navigate(['../requests'], {relativeTo: this.route});
   }
 }

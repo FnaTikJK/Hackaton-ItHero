@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, of, tap} from "rxjs";
 import {HttpService} from "../http.service";
 
 @Injectable({
@@ -7,8 +7,7 @@ import {HttpService} from "../http.service";
 })
 export class RequestsService {
 
-  private _requests = new BehaviorSubject<IRequest[]>([]);
-  public requests$ = this._requests.asObservable();
+  private _requests = new BehaviorSubject<IRequest[]>(null as unknown as IRequest[]);
 
   constructor(
     private httpS: HttpService
@@ -16,6 +15,13 @@ export class RequestsService {
 
   public createRequest$(request: IRequest) {
     return this.httpS.post('Requests', request);
+  }
+
+  get$() {
+    return this._requests.value ? of(this._requests.value) : this.httpS.get<IRequest[]>('Requests')
+      .pipe(
+        tap(reqs => this._requests.next(reqs))
+      );
   }
 }
 

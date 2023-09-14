@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class RequestsComponent {
 
-  protected requests$ = this.requestsS.requests$;
+  protected requests$ = this.requestsS.get$();
 
   constructor(
     private requestsS: RequestsService,

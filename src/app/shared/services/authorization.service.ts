@@ -17,6 +17,10 @@ export class AuthorizationService {
   public registrate$(credentials: IRegistrationCredentials){
     return this.httpS.post('Accounts/Register', credentials);
   }
+
+  public signOut$(){
+    return this.httpS.get('Accounts/Logout');
+  }
 }
 
 export interface ILoginCredentials{
