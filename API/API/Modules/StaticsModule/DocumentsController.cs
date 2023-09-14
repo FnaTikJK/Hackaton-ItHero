@@ -51,6 +51,7 @@ public class DocumentsController : ControllerBase
     var compRes = await companiesService.GetCompanyIdByUserId(id);
     if (!compRes.IsSuccess)
       return BadRequest("Вы не состоите в компании");
+
     var isOwner = await companiesService.IsUserIsOwner(compRes.Value, id);
     if (!isOwner.IsSuccess)
       return BadRequest(isOwner.Error);
@@ -63,8 +64,8 @@ public class DocumentsController : ControllerBase
         return BadRequest("Only .doc allowed");
       var path = file.Name switch
       {
-        $"{Spark}" => $"{PathToDocuments}/{Spark}{companyId}.doc",
-        $"{Registration}" => $"{PathToDocuments}/{Registration}{companyId}.doc",
+        $"{Spark}" => $"{PathToDocuments}/{Spark}__{companyId}.doc",
+        $"{Registration}" => $"{PathToDocuments}/{Registration}__{companyId}.doc",
         $"{Egrul}" => $"{PathToDocuments}/{Egrul}__{companyId}.doc",
         _ => ""
       };
