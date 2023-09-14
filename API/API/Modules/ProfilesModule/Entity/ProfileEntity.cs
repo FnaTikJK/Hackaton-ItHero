@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using API.Modules.CompaniesModule.Entity;
+using API.Modules.SpecializationsModule.Entity;
 
 namespace API.Modules.ProfilesModule.Entity
 {
@@ -14,5 +15,6 @@ namespace API.Modules.ProfilesModule.Entity
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public CompanyEntity? Company { get; set; }
+        public HashSet<SpecializationEntity>? Specializations { get; set; }
     }
 }

@@ -1,3 +1,5 @@
+using API.Modules.SpecializationsModule.Entity;
+
 namespace API.Modules.ProfilesModule.DTO
 {
     public class ProfileInnerDTO
@@ -8,5 +10,7 @@ namespace API.Modules.ProfilesModule.DTO
         public string About { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
+        public Guid? CompanyId { get; set; }
+        public HashSet<Guid>? Specializations { get; set; }
   }
 }

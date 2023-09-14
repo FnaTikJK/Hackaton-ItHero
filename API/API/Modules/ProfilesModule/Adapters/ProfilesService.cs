@@ -4,6 +4,7 @@ using API.Modules.ProfilesModule.DTO;
 using API.Modules.ProfilesModule.Entity;
 using API.Modules.ProfilesModule.Ports;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Modules.ProfilesModule.Adapters
 {
@@ -20,7 +21,10 @@ namespace API.Modules.ProfilesModule.Adapters
 
         public async Task<Result<ProfileOutDTO>> GetProfileAsync(Guid userId)
         {
-            var cur = await dataContexxt.Profiles.FindAsync(userId);
+            var cur = await dataContexxt.Profiles
+              .Include(p => p.Company)
+              .Include(p => p.Specializations)
+              .FirstOrDefaultAsync(p => p.Id == userId);
             if (cur == null)
                 return Result.Fail<ProfileOutDTO>("Такого пользователя не существует");
 

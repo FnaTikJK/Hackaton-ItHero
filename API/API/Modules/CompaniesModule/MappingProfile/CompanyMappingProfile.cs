@@ -12,6 +12,7 @@ namespace API.Modules.CompaniesModule.MappingProfile
       CreateMap<CompanyInnerDTO, CompanyEntity>();
       CreateMap<CompanyEntity, CompanyOutDTO>()
         .ForMember(dest => dest.Workers, opt => opt.MapFrom(src => src.Workers));
+      CreateMap<CompanyEntity, CompanyOutShortDTO>();
     }
   }
 }

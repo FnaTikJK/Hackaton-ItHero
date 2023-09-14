@@ -35,10 +35,10 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), builder =>
-    {
-        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-    });
+  options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), builder =>
+  {
+
+  });
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>

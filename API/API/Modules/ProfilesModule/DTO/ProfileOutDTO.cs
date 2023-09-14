@@ -1,3 +1,6 @@
+using API.Modules.CompaniesModule.DTO;
+using API.Modules.SpecializationsModule.DTO;
+
 namespace API.Modules.ProfilesModule.DTO
 {
     public class ProfileOutDTO
@@ -9,5 +12,7 @@ namespace API.Modules.ProfilesModule.DTO
         public string About { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
+        public CompanyOutShortDTO? Company { get; set; }
+        public HashSet<SpecializationOutDTO>? Specializations { get; set; }
   }
 }
