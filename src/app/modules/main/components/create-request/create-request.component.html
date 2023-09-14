@@ -1,0 +1,48 @@
+<div class="wrapper">
+  <form>
+    <ng-container *ngTemplateOutlet = "inputControlTemplate; context: {$implicit: form.controls.name, label: 'Наименование заказа'}"></ng-container>
+    <ng-container *ngTemplateOutlet = "selectControlTemplate; context: {$implicit: form.controls.specialization, options: specializations$ | async, multiple: false, label: 'Специализация'}"></ng-container>
+    <ng-container *ngTemplateOutlet = "inputControlTemplate; context: {$implicit: form.controls.budget, label: 'Бюджет'}"></ng-container>
+    <div>
+        <mat-form-field appearance = "outline">
+          <mat-label>Сроки исполнения</mat-label>
+          <input matInput [matDatepicker]="picker" [formControl] = "form.controls.deadline">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker [formControl] = "form.controls.deadline"></mat-datepicker>
+        </mat-form-field>
+    </div>
+     <ng-container *ngTemplateOutlet = "textAreaControlTemplate; context: {$implicit: form.controls.about, label: 'Формулировка задачи'}"></ng-container>
+      <ng-container *ngTemplateOutlet = "selectControlTemplate; context: {$implicit: form.controls.linkedProjects, options: requests$ | async,  multiple: true, label: 'Смежные проекты'}"></ng-container>
+    <button mat-flat-button [color] = "'primary'" (click) = "createNewRequest()">Создать запрос</button>
+  </form>
+</div>
+
+
+<ng-template #inputControlTemplate let-control let-label = "label">
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{label}}</mat-label>
+      <input matInput [formControl] = "control">
+    </mat-form-field>
+  </div>
+</ng-template>
+
+<ng-template #textAreaControlTemplate let-control let-label = "label">
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{label}}</mat-label>
+      <textarea matInput [formControl] = "control"></textarea>
+    </mat-form-field>
+  </div>
+</ng-template>
+
+<ng-template #selectControlTemplate let-control let-options = "options" let-multiple = "multiple" let-label = "label">
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{label}}</mat-label>
+      <mat-select [formControl]="control" [multiple] = "multiple">
+        <mat-option *ngFor="let opt of options" [value]="opt.ID">{{opt.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</ng-template>
