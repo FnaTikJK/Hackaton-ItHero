@@ -11,6 +11,7 @@ namespace API.Modules.CompaniesModule.Entity
     public string Name { get; set; }
     public int Inn { get; set; }
     public int Kpp { get; set; }
+    public string About { get; set; }
     public HashSet<ProfileEntity> Workers { get; set; }
   }
 }

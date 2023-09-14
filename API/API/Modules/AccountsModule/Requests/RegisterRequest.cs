@@ -7,7 +7,6 @@ namespace API.Modules.AccountsModule.Requests
     {
         public string Login { get; set; }
         public string Password { get; set; }
-        public string Email { get; set; }
         public AccountRole Role { get; set; }
     }
 }

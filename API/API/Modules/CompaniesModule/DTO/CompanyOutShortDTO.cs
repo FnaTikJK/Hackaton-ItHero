@@ -6,4 +6,5 @@ public class CompanyOutShortDTO
   public string Name { get; set; }
   public int Inn { get; set; }
   public int Kpp { get; set; }
+  public string About { get; set; }
 }

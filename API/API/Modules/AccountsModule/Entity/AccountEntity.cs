@@ -11,8 +11,6 @@ namespace API.Modules.AccountsModule.Entity
         [Required]
         public string PasswordHash { get; set; }
         [Required]
-        public string Email { get; set; }
-        [Required]
         public AccountRole Role { get; set; }
     }
 }
