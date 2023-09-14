@@ -27,13 +27,25 @@ namespace API.Modules.CompaniesModule
         : BadRequest(response.Error);
     }
 
+    [HttpGet("My")]
+    [Authorize]
+    public async Task<ActionResult<CompanyOutDTO>> GetMyCompany()
+    {
+      var response = await companiesService.GetCompanyIdByUserId(User.GetId());
+      if (!response.IsSuccess)
+        return BadRequest(response.Error);
+
+      var company = companiesService.GetCompany(response.Value);
+      return Ok(company.Value);
+    }
+
     [HttpPost]
     [Authorize]
     public async Task<ActionResult<Guid>> CreateCompanyAsync(CompanyInnerDTO companyInner)
     {
       var response = await companiesService.CreateCompanyAsync(User.GetId(), companyInner);
 
-      return response.IsSuccess ? Ok(response.Value)
+      return response.IsSuccess ? Ok(new { id = response.Value })
         : BadRequest(response.Error);
     }
 

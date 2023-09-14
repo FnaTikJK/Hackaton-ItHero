@@ -26,6 +26,15 @@ namespace API.Modules.CompaniesModule.Adapters
       return Result.Ok(mapper.Map<IEnumerable<CompanyOutDTO>>(companies));
     }
 
+    public Result<CompanyOutDTO> GetCompany(Guid id)
+    {
+      var company = dataContext.Companies.Find(id);
+      if (company == null)
+        return Result.Fail<CompanyOutDTO>("Такой компании не существует");
+
+      return Result.Ok(mapper.Map<CompanyOutDTO>(company));
+    }
+
     public async Task<Result<Guid>> CreateCompanyAsync(Guid ownerId, CompanyInnerDTO companyInner)
     {
       var cur = await GetCompanyIdByUserId(ownerId);
