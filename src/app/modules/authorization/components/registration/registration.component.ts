@@ -12,9 +12,6 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
-  forkJoin,
-  from,
-  switchMap,
   tap
 } from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
@@ -160,6 +157,7 @@ export class RegistrationComponent implements OnInit{
   }
 
   protected createCompany$(){
+    this.router.navigate(['../main'])
     //@ts-ignore
     const company: ICompany = {name: this.thirdStep.value.companyName, inn: this.thirdStep.value.INN , kpp: this.thirdStep.value.KPP }
     const formData = new FormData();
@@ -167,6 +165,6 @@ export class RegistrationComponent implements OnInit{
     formData.append( 'Registration',<File>this.thirdStep.value.registrationFile, 'Registration.doc');
     formData.append( 'Egrul',<File>this.thirdStep.value.egrulFile, 'Egrul.doc');
 
-    this.companyS.createCompany$(company, formData).subscribe();
+    this.companyS.createCompany$(company, formData).subscribe(v => this.router.navigate(['../main']));
   }
 }

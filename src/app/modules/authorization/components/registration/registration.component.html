@@ -59,7 +59,9 @@
           <div class="fileWrapper">
             <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.sparcFile, label: 'Справка СПАРК-РИСКИ'}"></ng-container>
             <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.registrationFile, label: 'Свидетельство о регистрации'}"></ng-container>
-            <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.egrulFile, label: 'Выписка ЕГРЮЛ'}"></ng-container>
+            <div style="margin-top: 10px">
+             <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.egrulFile, label: 'Выписка ЕГРЮЛ'}"></ng-container>
+            </div>
           </div>
           <button class="saveBtn" mat-icon-button style="margin-top: 20px" (click)="createCompany$()">
             <mat-icon>save</mat-icon>
