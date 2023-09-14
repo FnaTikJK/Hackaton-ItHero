@@ -16,6 +16,7 @@ namespace API.DAL
         {
             Database.EnsureDeleted();
             Database.EnsureCreated();
+            DbDefaultInitializer.FillDbByDefaultValues(this);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
