@@ -13,7 +13,7 @@ public class DocumentsController : ControllerBase
   private const string Registration = "Registration";
   private const string Egrul = "Egrul";
 
-  [HttpGet("My")]
+  [HttpGet]
   [Authorize]
   public async Task GetMyDocuments()
   {
@@ -30,9 +30,22 @@ public class DocumentsController : ControllerBase
     await HttpContext.Response.SendFileAsync($"{PathToDocuments}/{Egrul}__{id}.doc");
   }
 
-  [HttpPost("My")]
+  [HttpPost("Spark")]
   [Authorize]
-  public async Task<ActionResult> UpdatePhoto()
+  public async Task<ActionResult> UpdateSpark()
+  {
+    var id = User.GetId();
+    var file = Request.Form.Files.First();
+    var path = $"{PathToDocuments}.{Spark}__{id}.doc";
+    await using var fileStream = new FileStream(path, FileMode.Create);
+    await file.CopyToAsync(fileStream);
+
+    return NoContent();
+  }
+
+  /*[HttpPost("Spark")]
+  [Authorize]
+  public async Task<ActionResult> UpdateSpark()
   {
     var id = User.GetId();
     var files = Request.Form.Files;
@@ -49,5 +62,5 @@ public class DocumentsController : ControllerBase
       await file.CopyToAsync(fileStream);
     }
     return Ok();
-  }
+  }*/
 }
