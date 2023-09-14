@@ -26,6 +26,10 @@ export class LoginComponent {
 
   protected login$(){
     this.authS.login$(this.form.value as ILoginCredentials)
-      .subscribe(res => console.log('Успех'))
+      .subscribe(res => {
+        this.router.navigate(['/main']);
+        localStorage.setItem('savedRole', JSON.stringify(res));
+        this.authS.isLogged$.next(true);
+      })
   }
 }

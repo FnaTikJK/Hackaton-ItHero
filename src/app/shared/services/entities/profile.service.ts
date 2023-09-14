@@ -33,7 +33,7 @@ export interface IProfileDataDTO{
   "firstName": string;
   "thirdName": string;
   "specialization": string[];
-  companyId: string;
+  companyId?: string;
   "phoneNumber": string;
   "email": string;
 }

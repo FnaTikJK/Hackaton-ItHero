@@ -16,8 +16,17 @@ export class AppComponent {
     private router: Router
   ) {}
 
+  protected isLogged$ = this.authS.isLogged$;
   protected signOut$() {
     this.authS.signOut$()
-      .subscribe(res => this.router.navigate(['/authorization']))
+      .subscribe(res => {
+        localStorage.removeItem('savedRole');
+        this.authS.isLogged$.next(false);
+        this.router.navigate(['/authorization']);
+      })
+  }
+
+  navigateToUserProfile() {
+    // this.router.navigate()
   }
 }

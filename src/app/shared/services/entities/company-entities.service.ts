@@ -20,7 +20,7 @@ export class CompanyEntitiesService {
             map(roles => {
               //@ts-ignore
               const formedRoles = Object.entries(roles).map(([id, name]: [string, keyof typeof RolesTranslations]) =>
-                ({ID: +id, name: RolesTranslations[name]}));
+                ({id: +id, name: RolesTranslations[name]}));
               this._roles$.next(formedRoles);
               return formedRoles;
             }))
@@ -37,12 +37,12 @@ export class CompanyEntitiesService {
 }
 
 export interface ISpecialization {
-  id: number;
+  id: string;
   name: string;
 }
 
 export interface IRole {
-  ID: number;
+  id: number;
   name: string;
 }
 

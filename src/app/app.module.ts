@@ -9,21 +9,23 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {IconModule} from "./icon.module";
+import {NgLetDirective} from "./shared/directives/ng-let.directive";
 
 @NgModule({
   declarations: [
     AppComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    IconModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule,
+        IconModule,
+        NgLetDirective
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

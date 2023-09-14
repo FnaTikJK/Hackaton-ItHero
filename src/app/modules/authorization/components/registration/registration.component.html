@@ -43,8 +43,8 @@
         </mat-form-field>
         <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.phoneNumber, type: 'text', label: 'Контактный телефон'}"></ng-container>
         <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.email, type: 'text', label: 'Почта'}"></ng-container>
-        <ng-container *ngTemplateOutlet="selectControlTemplate; context: {$implicit: secondStep.controls.company, options: companies$ | async, label: 'Компания'}"></ng-container>
-        <button class="nextBtn" mat-icon-button (click)="initCompany(stepper)">
+        <ng-container *ngTemplateOutlet="selectControlTemplate; context: {$implicit: secondStep.controls.companyId, options: companies$ | async, label: 'Компания'}"></ng-container>
+        <button class="nextBtn" mat-icon-button (click)="createProfile$(stepper)">
           <mat-icon>arrow_forward</mat-icon>
         </button>
       </form>
@@ -55,6 +55,7 @@
         <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: thirdStep.controls.companyName, type: 'text', label: 'Название компании'}"></ng-container>
         <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: thirdStep.controls.INN, type: 'text', label: 'ИНН'}"></ng-container>
         <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: thirdStep.controls.KPP, type: 'text', label: 'КПП'}"></ng-container>
+        <ng-container *ngTemplateOutlet="textAreaControlTemplate; context: {$implicit: thirdStep.controls.about, type: 'text', label: 'О компании'}"></ng-container>
         <section class="wrapper__form-files">
           <h2 style="text-align: center">Документы</h2>
           <div class="fileWrapper">
@@ -87,11 +88,20 @@
   <mat-form-field appearance="outline">
     <mat-label>{{label}}</mat-label>
     <mat-select [formControl]="control">
-      <mat-option *ngFor="let opt of options" [value]="opt.ID">{{opt.name}}</mat-option>
+      <mat-option *ngFor="let opt of options" [value]="opt.id">{{opt.name}}</mat-option>
     </mat-select>
   </mat-form-field>
 </ng-template>
 
 <ng-template #fileControlTemplate let-control let-extension = "extension" let-label = "label">
     <app-file-value-accessor #fileUploader [formControl]="control" [label] = 'label'></app-file-value-accessor>
+</ng-template>
+
+<ng-template #textAreaControlTemplate let-control let-label = "label">
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{label}}</mat-label>
+      <textarea matInput [formControl] = "control" style="resize: none"></textarea>
+    </mat-form-field>
+  </div>
 </ng-template>

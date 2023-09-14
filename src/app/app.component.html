@@ -1,20 +1,27 @@
 
-<nav class="navigation">
-  <section class="navigation__main">
+<nav class="navigation" *ngLet="isLogged$ | async as isLogged">
+  <section class="navigation__main"
+           *ngIf="isLogged"
+  >
     <a class="navigation__link" routerLinkActive = "navigation__activated" routerLink="/main/executors">Исполнители</a>
     <a class="navigation__link" routerLinkActive = "navigation__activated" routerLink="/main/requests">Мои запросы</a>
   </section>
-  <section class="navigation__authorization">
+
+  <section
+    class="navigation__authorization"
+    *ngIf="!isLogged"
+  >
     <a class="navigation__link" routerLinkActive = "navigation__activated" routerLink="/authorization/login">Вход</a>
     <a class="navigation__link" routerLinkActive = "navigation__activated"  routerLink="/authorization/registration">Регистрация</a>
   </section>
+
   <section>
 
       <mat-menu #appMenu="matMenu">
         <ng-template matMenuContent>
           <div mat-menu-item>
             <mat-icon style="font-size: 30px;height: 30px; width: 30px;" [svgIcon]="'profile'"></mat-icon>
-            <button class="transparentBtn">Профиль</button>
+            <button class="transparentBtn" (click) = "navigateToUserProfile()">Профиль</button>
           </div>
           <button class="exitBtn" mat-menu-item (click) = "signOut$()">Выход</button>
         </ng-template>

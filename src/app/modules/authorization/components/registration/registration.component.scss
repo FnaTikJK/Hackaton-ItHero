@@ -20,6 +20,7 @@
 }
 
 .fileWrapper{
+  width: 800px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -44,4 +45,8 @@
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+}
+
+:host ::ng-deep .mat-mdc-form-field{
+  width: 100%;
 }

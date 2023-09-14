@@ -19,7 +19,7 @@ import {CompanyEntitiesService, ISpecialization} from "../../../../shared/servic
 import {AuthorizationService, IRegistrationCredentials} from "../../../../shared/services/authorization.service";
 import {MatStepper} from "@angular/material/stepper";
 import {IProfileData, IProfileDataDTO, ProfileService} from "../../../../shared/services/entities/profile.service";
-import {CompanyService, ICompanyDTO} from "../../../../shared/services/entities/company.service";
+import {CompanyService, ICompany, ICompanyDTO} from "../../../../shared/services/entities/company.service";
 import {HttpService} from "../../../../shared/services/http.service";
 
 @Component({
@@ -69,7 +69,7 @@ export class RegistrationComponent implements OnInit{
     phoneNumber: new FormControl('',
       [Validators.required]),
     email: new FormControl(''),
-    company: new FormControl<string>('')
+    companyId: new FormControl<string>(null as unknown as string)
   });
 
   thirdStep = new FormGroup({
@@ -81,6 +81,8 @@ export class RegistrationComponent implements OnInit{
       [Validators.required]),
     credentials: new FormControl('',
       [Validators.pattern('[a-zA-Zа-яА-ЯёЁ]+')]),
+    about: new FormControl('',
+      [Validators.required]),
     sparcFile: new FormControl<File>(null as unknown as File, [Validators.required]),
     registrationFile: new FormControl<File>(null as unknown as File, [Validators.required]),
     egrulFile: new FormControl<File>(null as unknown as File, [Validators.required]),
@@ -131,13 +133,13 @@ export class RegistrationComponent implements OnInit{
       ).subscribe();
   }
 
-  protected addSpecialization(specializationID: number, specializations: ISpecialization[] | null){
+  protected addSpecialization(specializationID: string, specializations: ISpecialization[] | null){
     //@ts-ignore
     this.secondStep.controls.specialization.setValue([...this.secondStep.controls.specialization.value,
       specializations?.find(s => s.id === specializationID)]);
     this.specializationInput.setValue('');
   }
-  protected removeSpecialization(specializationID: number){
+  protected removeSpecialization(specializationID: string){
     this.secondStep.controls.specialization.setValue([...(this.secondStep.controls.specialization.value?.filter(spec =>
       spec.id !== specializationID) ?? [])])
   }
@@ -146,40 +148,68 @@ export class RegistrationComponent implements OnInit{
     const regCredentials = {...this.firstStep.value};
     delete regCredentials.repeatPassword;
     this.authS.registrate$(regCredentials as unknown as IRegistrationCredentials)
-      .subscribe(() => stepper.next());
+      .subscribe((res) => {
+        stepper.next()
+        localStorage.setItem('savedRole', JSON.stringify(res));
+        this.authS.isLogged$.next(true);
+      });
   }
 
   protected createProfile$(stepper: MatStepper) {
-    // const profileData = {
-    //   ...this.secondStep.value,
-    //     specialization: this.secondStep.value.specialization?.map(s => s.id)
-    // };
-    // this.profileS.createProfile$(profileData as IProfileDataDTO)
-    //   .subscribe(() => stepper.next());
-  }
+      const profileData = {
+        ...this.secondStep.value,
+        specialization: this.secondStep.value.specialization?.map(s => s.id)
+      };
+      const requests = [this.profileS.createProfile$(profileData as unknown as IProfileDataDTO)];
+      if (this.secondStep.value.companyId) {
+        requests.push(this.companies$
+          .pipe(
+            map(comp => comp.find(c => c.id === this.secondStep.value.companyId)),
+            take(1)
+          ));
+        requests.push(this.companyS.getDocuments$(this.secondStep.value.companyId));
+      }
+      forkJoin(requests)
+        .subscribe(([profile, company, files]) => {
+          if (company) {
+            // this.s
+          } else {
+            stepper.next();
+          }
+        })
+    }
 
   protected initCompany(stepper: MatStepper){
-    if (this.secondStep.controls.company.value) {
+    if (this.secondStep.controls.companyId.value) {
       this.companies$.pipe(
         take(1),
-        map(companies => companies.find(c => c.id === this.secondStep.controls.company.value)),
+        map(companies => companies.find(c => c.id === this.secondStep.controls.companyId.value)),
         switchMap(company => this.httpS.get<FormData>(`Statics/Documents/${company?.id}`)
           .pipe(
             map(files => [company, files])
           ))
       )
+    } else {
+      stepper.next();
     }
   }
 
   protected createCompany$(){
-    this.router.navigate(['../main'])
-    //@ts-ignore
-    const company: ICompany = {name: this.thirdStep.value.companyName, inn: this.thirdStep.value.INN , kpp: this.thirdStep.value.KPP }
-    const formData = new FormData();
-    formData.append( 'Spark',<File>this.thirdStep.value.sparcFile, 'Spark.doc');
-    formData.append( 'Registration',<File>this.thirdStep.value.registrationFile, 'Registration.doc');
-    formData.append( 'Egrul',<File>this.thirdStep.value.egrulFile, 'Egrul.doc');
-
-    this.companyS.createCompany$(company, formData).subscribe(v => this.router.navigate(['../main']));
+    if (this.secondStep.controls.companyId.value) {
+      this.router.navigate(['../main'])
+      return;
+    } else {
+      //@ts-ignore
+      const company: ICompany = {name: this.thirdStep.value.companyName, inn: this.thirdStep.value.INN , kpp: this.thirdStep.value.KPP, about:  this.thirdStep.value.about}
+      const formData = new FormData();
+      formData.append( 'Spark',<File>this.thirdStep.value.sparcFile, 'Spark.doc');
+      formData.append( 'Registration',<File>this.thirdStep.value.registrationFile, 'Registration.doc');
+      formData.append( 'Egrul',<File>this.thirdStep.value.egrulFile, 'Egrul.doc');
+      this.companyS.createCompany$(company, formData)
+        .pipe(
+          switchMap(id =>  this.profileS.createProfile$({...this.secondStep.value, companyId: id} as unknown as IProfileDataDTO))
+        )
+        .subscribe(() => this.router.navigate(['../main']));
+    }
   }
 }

@@ -1,25 +1,28 @@
 import { Injectable } from '@angular/core';
 import {HttpService} from "./http.service";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
 
+  public isLogged$ =
+    new BehaviorSubject<boolean>(localStorage.getItem('savedRole') ? JSON.parse(localStorage.getItem('savedRole') as string).role : false);
   constructor(
     private httpS: HttpService
   ) { }
 
   public login$(credentials: ILoginCredentials){
-    return this.httpS.post('Accounts/Login', credentials);
+    return this.httpS.post<{role: string}>('Accounts/Login', credentials);
   }
 
   public registrate$(credentials: IRegistrationCredentials){
-    return this.httpS.post('Accounts/Register', credentials);
+    return this.httpS.post<{role: string}>('Accounts/Register', credentials);
   }
 
   public signOut$(){
-    return this.httpS.get('Accounts/Logout');
+    return this.httpS.post('Accounts/Logout', null);
   }
 }
 
