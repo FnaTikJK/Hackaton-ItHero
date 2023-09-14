@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, catchError, Observable, of} from "rxjs";
-import {isFirst} from "../operators/operators";
-import {HttpService} from "./http.service";
+import {isFirst} from "../../operators/operators";
+import {HttpService} from "../http.service";
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +38,7 @@ export class CompanyEntitiesService {
     this.httpS.get<ArrayLike<Object>>('Accounts/Roles')
       .subscribe((rolesObj: Object) => {
         this._roles$.next(
+          //@ts-ignore
           Object.entries(rolesObj).map(([id, name] : [string, keyof typeof RolesTranslations]) =>
             ({ID: +id, name: RolesTranslations[name]}))
         )

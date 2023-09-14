@@ -48,7 +48,6 @@
         </button>
       </form>
     </mat-step>
-
     <mat-step [stepControl]="form.controls.thirdStep">
       <ng-template matStepLabel>Информация о компании</ng-template>
       <form  class="wrapper__form" [formGroup]="form.controls.thirdStep">
@@ -62,7 +61,7 @@
             <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.registrationFile, label: 'Свидетельство о регистрации'}"></ng-container>
             <ng-container *ngTemplateOutlet="fileControlTemplate; context: {$implicit: thirdStep.controls.egrulFile, label: 'Выписка ЕГРЮЛ'}"></ng-container>
           </div>
-          <button class="saveBtn" mat-icon-button style="margin-top: 20px">
+          <button class="saveBtn" mat-icon-button style="margin-top: 20px" (click)="createCompany$()">
             <mat-icon>save</mat-icon>
           </button>
         </section>

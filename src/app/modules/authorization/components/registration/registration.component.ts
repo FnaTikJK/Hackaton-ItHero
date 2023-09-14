@@ -6,12 +6,24 @@ import {
 } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, filter, tap} from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  forkJoin,
+  from,
+  switchMap,
+  tap
+} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {CompanyEntitiesService, ISpecialization} from "../../../../shared/services/company-entities.service";
+import {CompanyEntitiesService, ISpecialization} from "../../../../shared/services/entities/company-entities.service";
 import {AuthorizationService, IRegistrationCredentials} from "../../../../shared/services/authorization.service";
 import {MatStepper} from "@angular/material/stepper";
-import {IProfileData, ProfileService} from "../../../../shared/services/profile.service";
+import {IProfileData, ProfileService} from "../../../../shared/services/entities/profile.service";
+import {CompanyService, ICompany} from "../../../../shared/services/entities/company.service";
+import {HttpService} from "../../../../shared/services/http.service";
 
 @Component({
   selector: 'app-registration',
@@ -31,8 +43,10 @@ export class RegistrationComponent implements OnInit{
     private companyEntitiesS: CompanyEntitiesService,
     private authS: AuthorizationService,
     private profileS: ProfileService,
+    private companyS: CompanyService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private httpS: HttpService
   ) {}
 
   firstStep = new FormGroup({
@@ -143,5 +157,16 @@ export class RegistrationComponent implements OnInit{
     };
     this.profileS.createProfile$(profileData as IProfileData)
       .subscribe(() => stepper.next());
+  }
+
+  protected createCompany$(){
+    //@ts-ignore
+    const company: ICompany = {name: this.thirdStep.value.companyName, inn: this.thirdStep.value.INN , kpp: this.thirdStep.value.KPP }
+    const formData = new FormData();
+    formData.append( 'Spark',<File>this.thirdStep.value.sparcFile, 'Spark.doc');
+    formData.append( 'Registration',<File>this.thirdStep.value.registrationFile, 'Registration.doc');
+    formData.append( 'Egrul',<File>this.thirdStep.value.egrulFile, 'Egrul.doc');
+
+    this.companyS.createCompany$(company, formData).subscribe();
   }
 }

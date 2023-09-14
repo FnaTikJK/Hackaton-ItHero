@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {ISpecialization} from "../../../shared/services/company-entities.service";
+import {ISpecialization} from "../../../shared/services/entities/company-entities.service";
 import {map, Observable, of} from "rxjs";
 
 @Pipe({
