@@ -17,7 +17,7 @@ public class PhotosController : ControllerBase
     await GetPhotoAsync(User.GetId());
   }
 
-  [HttpPost("My")]
+  [HttpPost("My"), DisableRequestSizeLimit]
   [Authorize]
   public async Task<ActionResult> UpdatePhoto()
   {
