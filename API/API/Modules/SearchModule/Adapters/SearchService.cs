@@ -6,6 +6,7 @@ using API.Modules.ProfilesModule.DTO;
 using API.Modules.SearchModule.DTO;
 using API.Modules.SearchModule.Ports;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Modules.SearchModule.Adapters;
 
@@ -23,6 +24,8 @@ public class SearchService : ISearchService
   public Result<SearchResponseDTO> Search(SearchRequestDTO searchRequest)
   {
     var res = dataContext.Profiles
+      .Include(p => p.Company)
+      .Include(p => p.Specializations)
       .Where(p => p.Account.Role == AccountRole.Executor);
     if (searchRequest.Name != null)
       res = res.Where(p => p.SecondName.Contains(searchRequest.Name));
