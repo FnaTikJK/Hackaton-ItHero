@@ -43,7 +43,8 @@
         </mat-form-field>
         <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.phoneNumber, type: 'text', label: 'Контактный телефон'}"></ng-container>
         <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: secondStep.controls.email, type: 'text', label: 'Почта'}"></ng-container>
-        <button class="nextBtn" mat-icon-button (click)="createProfile$(stepper)">
+        <ng-container *ngTemplateOutlet="selectControlTemplate; context: {$implicit: secondStep.controls.company, options: companies$ | async, label: 'Компания'}"></ng-container>
+        <button class="nextBtn" mat-icon-button (click)="initCompany(stepper)">
           <mat-icon>arrow_forward</mat-icon>
         </button>
       </form>

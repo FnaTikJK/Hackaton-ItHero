@@ -11,7 +11,7 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
-  filter,
+  filter, forkJoin, map, switchMap, take,
   tap
 } from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
@@ -33,14 +33,15 @@ export class RegistrationComponent implements OnInit{
   protected specializations$ = this.companyEntitiesS.getSpecializations$();
   protected specializationInput = new FormControl('');
   protected specializationNameFilter$ = new BehaviorSubject('');
+  protected companies$ = this.companyS.getCompanies$();
 
   protected roles$ = this.companyEntitiesS.getRoles$();
   constructor(
     private destroyRef: DestroyRef,
     private companyEntitiesS: CompanyEntitiesService,
+    private companyS: CompanyService,
     private authS: AuthorizationService,
     private profileS: ProfileService,
-    private companyS: CompanyService,
     private route: ActivatedRoute,
     private router: Router,
     private httpS: HttpService
@@ -149,12 +150,25 @@ export class RegistrationComponent implements OnInit{
   }
 
   protected createProfile$(stepper: MatStepper) {
-    const profileData = {
-      ...this.secondStep.value,
-        specialization: this.secondStep.value.specialization?.map(s => s.id)
-    };
-    this.profileS.createProfile$(profileData as IProfileDataDTO)
-      .subscribe(() => stepper.next());
+    // const profileData = {
+    //   ...this.secondStep.value,
+    //     specialization: this.secondStep.value.specialization?.map(s => s.id)
+    // };
+    // this.profileS.createProfile$(profileData as IProfileDataDTO)
+    //   .subscribe(() => stepper.next());
+  }
+
+  protected initCompany(stepper: MatStepper){
+    if (this.secondStep.controls.company.value) {
+      this.companies$.pipe(
+        take(1),
+        map(companies => companies.find(c => c.id === this.secondStep.controls.company.value)),
+        switchMap(company => this.httpS.get<FormData>(`Statics/Documents/${company?.id}`)
+          .pipe(
+            map(files => [company, files])
+          ))
+      )
+    }
   }
 
   protected createCompany$(){
