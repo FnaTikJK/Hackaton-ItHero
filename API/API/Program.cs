@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using API.DAL;
 using API.Infrastructure;
+using API.Modules.AccountsModule.Entity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,16 @@ builder.Services.AddAuthentication(options => {
         };
         opt.LoginPath = "/api/Accounts/Login";
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+
+  options.AddPolicy("Admin",
+    authBuilder =>
+    {
+      authBuilder.RequireRole(nameof(AccountRole.Admin));
+    });
+
+});
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

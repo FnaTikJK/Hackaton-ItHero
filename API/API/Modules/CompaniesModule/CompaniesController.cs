@@ -13,9 +13,9 @@ namespace API.Modules.CompaniesModule
   {
     private readonly ICompaniesService companiesService;
 
-    public CompaniesController(ICompaniesService comapniesService)
+    public CompaniesController(ICompaniesService companiesService)
     {
-      this.companiesService = comapniesService;
+      this.companiesService = companiesService;
     }
 
     [HttpGet]
