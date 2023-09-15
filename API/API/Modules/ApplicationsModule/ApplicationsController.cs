@@ -51,7 +51,7 @@ public class ApplicationsController : ControllerBase
       : BadRequest(response.Error);
   }
 
-  [HttpPut("Update")]
+  [HttpPut("{applicationId}")]
   [Authorize]
   public async Task<ActionResult> UpdateApplicationAsync(Guid applicationId, ApplicationInnerDTO applicationInner)
   {
@@ -62,31 +62,49 @@ public class ApplicationsController : ControllerBase
       : BadRequest(response.Error);
   }
 
-  [HttpPost("Suggest")]
+  [HttpPost("{applicationId}/Suggest")]
   [Authorize("Admin")]
-  public async Task<ActionResult> SuggestWorkersAsync(Guid applicationId, HashSet<Guid> workers)
+  public async Task<ActionResult> SuggestWorkersAsync(Guid applicationId, WorkersDTO workersDto)
   {
-    var response = await applicationsService.SuggestWorkersAsync(applicationId, workers).ConfigureAwait(false);
+    var response = await applicationsService.SuggestWorkersAsync(applicationId, workersDto.WorkersId).ConfigureAwait(false);
 
     return response.IsSuccess ? NoContent()
       : BadRequest(response.Error);
   }
 
-  [HttpPost("Hire")]
-  public async Task<ActionResult> HireWorkersAsync(Guid applicationId, HashSet<Guid> workers)
+  [HttpPost("{applicationId}/Hire")]
+  public async Task<ActionResult> HireWorkersAsync(Guid applicationId, WorkersDTO workersDto)
   {
-    var response = await applicationsService.HireWorkersAsync(applicationId, workers).ConfigureAwait(false);
+    var response = await applicationsService.HireWorkersAsync(applicationId, workersDto.WorkersId).ConfigureAwait(false);
 
     return response.IsSuccess ? NoContent()
       : BadRequest(response.Error);
   }
 
-  [HttpPost("Invite")]
-  public async Task<ActionResult> InviteWorkersAsync(Guid applicationId, HashSet<Guid> workers)
+  [HttpPost("{applicationId}/Invite")]
+  public async Task<ActionResult> InviteWorkersAsync(Guid applicationId, WorkersDTO workersDto)
   {
-    var response = await applicationsService.InviteWorkersAsync(applicationId, workers).ConfigureAwait(false);
+    var response = await applicationsService.InviteWorkersAsync(applicationId, workersDto.WorkersId).ConfigureAwait(false);
 
     return response.IsSuccess ? NoContent()
       : BadRequest(response.Error);
+  }
+
+  public class WorkersDTO
+  {
+    public HashSet<Guid> WorkersId { get; set; }
+  }
+
+  [HttpPost("{applicationId}/Reject")]
+  public async Task<ActionResult> InviteWorkersAsync(Guid applicationId, [FromBody]WorkerDTO workerDto)
+  {
+    await applicationsService.RemoveWorker(applicationId, workerDto.WorkerId);
+
+    return NoContent();
+  }
+
+  public class WorkerDTO
+  {
+    public Guid WorkerId { get; set; }
   }
 }

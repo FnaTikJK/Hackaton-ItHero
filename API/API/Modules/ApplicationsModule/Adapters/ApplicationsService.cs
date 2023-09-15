@@ -1,10 +1,14 @@
+using System.Collections;
 using API.DAL;
 using API.Infrastructure;
 using API.Modules.ApplicationsModule.DTO;
 using API.Modules.ApplicationsModule.Entity;
 using API.Modules.ApplicationsModule.Ports;
 using API.Modules.ProfilesModule.Entity;
+using API.Modules.SpecializationsModule.Entity;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace API.Modules.ApplicationsModule.Adapters;
 
@@ -13,6 +17,22 @@ public class  ApplicationsService : IApplicationsService
   private readonly DataContext dataContext;
   private readonly IMapper mapper;
 
+  private IIncludableQueryable<ApplicationEntity, HashSet<SpecializationEntity>?> Applications => dataContext.Applications
+    .Include(a => a.InvitedExecutors)
+    .ThenInclude(p => p.Company)
+    .Include(a => a.InvitedExecutors)
+    .ThenInclude(p => p.Specializations)
+
+    .Include(a => a.HiredExecutors)
+    .ThenInclude(p => p.Company)
+    .Include(a => a.HiredExecutors)
+    .ThenInclude(p => p.Specializations)
+
+    .Include(a => a.SuggestedExecutors)
+    .ThenInclude(p => p.Company)
+    .Include(a => a.SuggestedExecutors)
+    .ThenInclude(p => p.Specializations);
+
   public ApplicationsService(DataContext dataContext, IMapper mapper)
   {
     this.dataContext = dataContext;
@@ -20,7 +40,7 @@ public class  ApplicationsService : IApplicationsService
   }
   public Result<IEnumerable<ApplicationOutDTO>> GetApplicationsAsync(Guid ownerId)
   {
-    var applications = dataContext.Applications.Where(app => app.OwnerId == ownerId);
+    var applications = Applications.Where(app => app.OwnerId == ownerId);
     var y = dataContext.Applications.ToList();
     var x = applications.ToList();
     return Result.Ok(mapper.Map<IEnumerable<ApplicationOutDTO>>(applications));
@@ -29,11 +49,10 @@ public class  ApplicationsService : IApplicationsService
   public async Task<Result<Guid>> CreateApplicationAsync(Guid ownerId, ApplicationInnerDTO applicationInner)
   {
     var application = mapper.Map<ApplicationEntity>(applicationInner);
-    application.ExpiryAt = DateTime.UtcNow + TimeSpan.FromDays(90);
-    application.Id = Guid.NewGuid();
+    application.ExpiryAt = DateTime.UtcNow + TimeSpan.FromTicks(applicationInner.CompletionTime ?? 0);
     application.OwnerId = ownerId;
-    await dataContext.Applications.AddAsync(application).ConfigureAwait(false);
-    await dataContext.SaveChangesAsync().ConfigureAwait(false);
+    await dataContext.Applications.AddAsync(application);
+    await dataContext.SaveChangesAsync();
     return Result.Ok(application.Id);
   }
 
@@ -113,6 +132,18 @@ public class  ApplicationsService : IApplicationsService
     await dataContext.SaveChangesAsync().ConfigureAwait(false);
 
     return Result.Ok(true);
+  }
+
+  public async Task RemoveWorker(Guid applicationId, Guid workerId)
+  {
+    var application = await Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
+    if (application == null)
+      throw new Exception("Нет заявки");
+
+    application.InvitedExecutors?.RemoveWhere(w => w.Id == workerId);
+    application.SuggestedExecutors?.RemoveWhere(w => w.Id == workerId);
+    application.HiredExecutors?.RemoveWhere(w => w.Id == workerId);
+    await dataContext.SaveChangesAsync();
   }
 
   private async Task<HashSet<ProfileEntity>> GetWorkersAsync(IEnumerable<Guid> workersIds)

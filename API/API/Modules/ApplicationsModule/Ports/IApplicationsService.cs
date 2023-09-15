@@ -18,6 +18,5 @@ public interface IApplicationsService
   public Task<Result<bool>> InviteWorkersAsync(Guid applicationId, IEnumerable<Guid> workersIds);
 
   public Task<Result<bool>> HireWorkersAsync(Guid applicationId, IEnumerable<Guid> workerId);
-
-
+  Task RemoveWorker(Guid applicationId, Guid workerId);
 }
