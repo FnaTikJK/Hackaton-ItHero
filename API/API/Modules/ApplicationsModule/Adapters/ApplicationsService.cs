@@ -49,7 +49,8 @@ public class  ApplicationsService : IApplicationsService
   public async Task<Result<Guid>> CreateApplicationAsync(Guid ownerId, ApplicationInnerDTO applicationInner)
   {
     var application = mapper.Map<ApplicationEntity>(applicationInner);
-    application.ExpiryAt = DateTime.UtcNow + TimeSpan.FromTicks(applicationInner.CompletionTime ?? 0);
+    application.ExpiryAt = DateTime.UtcNow
+                           + TimeSpan.FromTicks(applicationInner.CompletionTime ?? new DateTime(0,0,30).Ticks);
     application.OwnerId = ownerId;
     await dataContext.Applications.AddAsync(application);
     await dataContext.SaveChangesAsync();
