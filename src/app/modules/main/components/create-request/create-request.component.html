@@ -1,11 +1,10 @@
+<button style="position: absolute; right: 5px" mat-icon-button (click)="closeDialog()">
+  <mat-icon>close</mat-icon>
+</button>
 <div class="wrapper">
-  <button mat-icon-button (click) = "returnToRequestsPage()">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
   <form class="form">
     <h1 style="">Новый заказ</h1>
     <ng-container *ngTemplateOutlet = "inputControlTemplate; context: {$implicit: form.controls.name, label: 'Наименование заказа'}"></ng-container>
-    <ng-container *ngTemplateOutlet = "selectControlTemplate; context: {$implicit: form.controls.specialization, options: specializations$ | async, multiple: false, label: 'Специализация'}"></ng-container>
     <ng-container *ngTemplateOutlet = "inputControlTemplate; context: {$implicit: form.controls.budget, label: 'Бюджет'}"></ng-container>
     <div>
         <mat-form-field appearance = "outline">
@@ -16,8 +15,7 @@
         </mat-form-field>
     </div>
      <ng-container *ngTemplateOutlet = "textAreaControlTemplate; context: {$implicit: form.controls.about, label: 'Формулировка задачи'}"></ng-container>
-      <ng-container *ngTemplateOutlet = "selectControlTemplate; context: {$implicit: form.controls.linkedProjects, options: requests$ | async,  multiple: true, label: 'Смежные проекты'}"></ng-container>
-    <button mat-flat-button [color] = "'primary'" (click) = "createNewRequest()" [disabled] = "form.invalid">Создать запрос</button>
+    <button mat-flat-button type="button" [color] = "'primary'" (click) = "createNewRequest()" [disabled] = "form.invalid">Создать запрос</button>
   </form>
 </div>
 

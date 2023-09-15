@@ -160,7 +160,9 @@ export class RegistrationComponent implements OnInit{
         ...this.secondStep.value,
         specialization: this.secondStep.value.specialization?.map(s => s.id)
       };
-      const requests = [this.profileS.createProfile$(profileData as unknown as IProfileDataDTO)];
+      const requests = [
+        this.profileS.createProfile$(profileData as unknown as IProfileDataDTO)
+      ];
       if (this.secondStep.value.companyId) {
         requests.push(this.companies$
           .pipe(
@@ -169,6 +171,7 @@ export class RegistrationComponent implements OnInit{
           ));
         requests.push(this.companyS.getDocuments$(this.secondStep.value.companyId));
       }
+
       forkJoin(requests)
         .subscribe(([profile, company, files]) => {
           if (company) {
@@ -200,15 +203,12 @@ export class RegistrationComponent implements OnInit{
       return;
     } else {
       //@ts-ignore
-      const company: ICompany = {name: this.thirdStep.value.companyName, inn: this.thirdStep.value.INN , kpp: this.thirdStep.value.KPP, about:  this.thirdStep.value.about}
+      const company: ICompany = {name: this.thirdStep.value.companyName, inn: +this.thirdStep.value.INN , kpp: +this.thirdStep.value.KPP, about:  this.thirdStep.value.about}
       const formData = new FormData();
       formData.append( 'Spark',<File>this.thirdStep.value.sparcFile, 'Spark.doc');
       formData.append( 'Registration',<File>this.thirdStep.value.registrationFile, 'Registration.doc');
       formData.append( 'Egrul',<File>this.thirdStep.value.egrulFile, 'Egrul.doc');
       this.companyS.createCompany$(company, formData)
-        .pipe(
-          switchMap(id =>  this.profileS.createProfile$({...this.secondStep.value, companyId: id} as unknown as IProfileDataDTO))
-        )
         .subscribe(() => this.router.navigate(['../main']));
     }
   }

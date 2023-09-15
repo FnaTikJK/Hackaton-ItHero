@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class SocketService {
 
-  private socket = new WebSocket('wss://localhost:7029/Chats');
+  private socket = new WebSocket('wss://localhost:7029/api/Chats');
   constructor() {
     this.initSocket();
   }

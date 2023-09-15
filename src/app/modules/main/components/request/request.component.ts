@@ -18,10 +18,10 @@ export class RequestComponent implements OnInit{
 
   protected request$ = this.route.params
     .pipe(
-      filter(params => params && params['ID']),
+      filter(params => params && params['id']),
       switchMap(params => this.requests$
         .pipe(
-          map(items => items.find(i => i['ID'] === params['ID']))
+          map(items => items.find(i => i['id'] === params['id']))
         )),
       take(1)
     );

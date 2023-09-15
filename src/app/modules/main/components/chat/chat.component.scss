@@ -1,0 +1,31 @@
+.chat-wrapper{
+  height: 600px;
+  width: 300px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 25;
+}
+
+.header {
+  height: 10%;
+  width: 100%;
+  color: white;
+  background-color: black;
+}
+
+.main{
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: #9b9999;
+}
+
+.message{
+  background-color: whitesmoke;
+  border-radius: 5%;
+  padding: 5px;
+  margin-bottom: 5px;
+}

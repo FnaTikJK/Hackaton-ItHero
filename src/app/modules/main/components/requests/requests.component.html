@@ -1,25 +1,18 @@
-<div class="wrapper" *ngLet="requests$ | async as requests">
-  <button mat-icon-button (click) = "createNewRequest()">
+<div style="position: relative" class="wrapper" *ngLet="requests$ | async as requests">
+  <button mat-icon-button style="position: absolute; right: 0" (click) = "createNewRequest()">
     <mat-icon>add</mat-icon>
   </button>
-  <section>
-    <ul>
-      <li *ngFor = "let request of requests" (click) = "openRequestPage(request.ID)">
-        <mat-card class="example-card">
-          <mat-card-header>
-            <mat-card-title>Shiba Inu</mat-card-title>
-            <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <p>This card indeterminates progress bar.</p>
-            <p></p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button>LIKE</button>
-            <button mat-button>SHARE</button>
-          </mat-card-actions>
-        </mat-card>
-      </li>
-    </ul>
+  <section style="padding-top: 50px">
+    <mat-expansion-panel style="margin-bottom: 1px" *ngFor="let request of requests">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span style="color: gray">Название: </span>{{request.title}}
+        </mat-panel-title>
+        <mat-panel-description>
+          <p><span style="color: gray">Бюджет:</span>{{request.budget}}</p>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p><span style="color: gray">О Проекте: </span>{{request.text}}</p>
+    </mat-expansion-panel>
   </section>
 </div>
