@@ -11,27 +11,25 @@ export class RequestsService {
 
   constructor(
     private httpS: HttpService
-  ) { this.httpS.get<IRequest[]>('Requests').subscribe(reqs => this._requests.next(reqs)) }
+  ) { this.httpS.get<IRequest[]>('Applications/My').subscribe(reqs => this._requests.next(reqs)) }
 
   public createRequest$(request: IRequest) {
-    return this.httpS.post('Requests', request);
+    return this.httpS.post('Applications/Create', request);
   }
 
   get$() {
-    return this._requests.value ? of(this._requests.value) : this.httpS.get<IRequest[]>('Requests')
-      .pipe(
-        tap(reqs => this._requests.next(reqs))
-      );
+    return this._requests.value ? this._requests : this.httpS.get<IRequest[]>('Applications/My');
+  }
+
+  addRequest(req: IRequest) {
+    this._requests.next([...this._requests.value, req]);
   }
 }
 
 
-export interface IRequest {
-  ID?: number;
-  name: string;
-  specialization: number;
-  budget: number;
-  deadline: string | Date;
-  about: string;
-  linkedProjects: number[];
+export interface IRequest  {
+  "id": string,
+  "title": string,
+  "budget": 0,
+  "text": string
 }

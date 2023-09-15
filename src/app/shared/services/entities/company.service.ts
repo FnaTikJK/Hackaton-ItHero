@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpService} from "../http.service";
-import {BehaviorSubject, forkJoin, map, Observable, of, tap} from "rxjs";
+import {BehaviorSubject, forkJoin, map, Observable, of, switchMap, tap} from "rxjs";
 import {IProfileData} from "./profile.service";
 
 @Injectable({
@@ -14,14 +14,14 @@ export class CompanyService {
   ) { }
 
   public createCompany$(company: ICompanyDTO, companyFiles: FormData): Observable<string> {
-   return forkJoin([
-     this.httpS.post<string>('Companies', company),
-     this.httpS.post('Statics/Documents/My', companyFiles)
-   ])
-     .pipe(
-       map(([companyID, docs]) => companyID)
-     )
-     ;
+     return this.httpS.post<{id: string}>('Companies', company)
+       .pipe(
+         map(res => res.id),
+         switchMap(id => forkJoin([of(id), this.httpS.post(`/Companies/${id}/Join`, id)])),
+         map(([id, dsa]) => id),
+         switchMap(([id, sad]) => forkJoin([of(id), this.httpS.post('Statics/Documents/My', companyFiles)])),
+         map(([id, lol]) => id)
+       );
   }
 
   public getDocuments$(companyID: string) {

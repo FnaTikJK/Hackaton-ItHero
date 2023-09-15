@@ -1,0 +1,54 @@
+
+<div class="wrapper" *ngLet="company$ | async as company">
+  <section class="info">
+    <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: company?.name, type: 'text', label: 'Название компании'}"></ng-container>
+    <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: company?.inn, type: 'text', label: 'ИНН'}"></ng-container>
+    <ng-container *ngTemplateOutlet="inputControlTemplate; context: {$implicit: company?.kpp, type: 'text', label: 'КПП'}"></ng-container>
+    <ng-container *ngTemplateOutlet="textAreaControlTemplate; context: {$implicit: company?.about, type: 'text', label: 'О компании'}"></ng-container>
+  </section>
+<!--  <section>-->
+<!--    <h2>Документы</h2>-->
+<!--  </section>-->
+<!--  <section class="wrapper__form-files" *ngLet="files$ | async as files">-->
+<!--    <h2 style="text-align: center">Документы</h2>-->
+<!--    <div class="fileWrapper">-->
+<!--     <iframe [src]="files?.sparc"></iframe>-->
+<!--    </div>-->
+<!--&lt;!&ndash;    <button class="saveBtn" mat-icon-button style="margin-top: 20px" (click)="createCompany$()">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>save</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;    </button>&ndash;&gt;-->
+<!--  </section>-->
+</div>
+
+<ng-template #inputControlTemplate let-control let-type = "type" let-label = "label">
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{label}}</mat-label>
+      <input [formControl]="control" matInput [type]="type">
+    </mat-form-field>
+    </div>
+</ng-template>
+
+<ng-template #selectControlTemplate let-control let-options = "options" let-label = "label">
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{label}}</mat-label>
+      <mat-select [formControl]="control">
+        <mat-option *ngFor="let opt of options" [value]="opt.id">{{opt.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</ng-template>
+
+<ng-template #fileControlTemplate let-control let-extension = "extension" let-label = "label">
+  <app-file-value-accessor #fileUploader [formControl]="control" [label] = 'label'></app-file-value-accessor>
+</ng-template>
+
+<ng-template #textAreaControlTemplate let-control let-label = "label">
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{label}}</mat-label>
+      <textarea matInput [formControl] = "control" style="resize: none"></textarea>
+    </mat-form-field>
+  </div>
+</ng-template>

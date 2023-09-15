@@ -1,4 +1,17 @@
 .wrapper{
-  width: 1000px;
+  width: 600px;
+  margin: 0 auto;
   margin-top: 100px;
+}
+
+:host ::ng-deep{
+  .mat-content {
+    justify-content: space-between !important;
+  }
+  .mat-expansion-panel-header-title, .mat-expansion-panel-header-description{
+    flex-grow: 0 !important;
+    p {
+      margin-bottom: 0;
+    }
+  }
 }

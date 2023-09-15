@@ -1,0 +1,13 @@
+<div class="chat-wrapper">
+  <div class="header">Чат</div>
+  <div class="main">
+    <div>
+      <div class="message" *ngFor="let message of messages$ | async">
+        {{message}}
+      </div>
+    </div>
+    <div style="width: 100%; height: 5%; position: absolute; bottom: 0">
+      <input #input style="width: 100%; height: 100%" (keyup)="sendMess(input.value, $event)" placeholder="Отправить сообщение...">
+    </div>
+  </div>
+</div>

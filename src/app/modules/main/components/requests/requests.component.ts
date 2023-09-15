@@ -1,6 +1,8 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {RequestsService} from "../../../../shared/services/entities/requests.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateRequestComponent} from "../create-request/create-request.component";
 
 @Component({
   selector: 'app-requests',
@@ -15,16 +17,24 @@ export class RequestsComponent {
   constructor(
     private requestsS: RequestsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private matDialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   protected createNewRequest() {
-    this.router.navigate(['../create-request'], {relativeTo: this.route});
+    this.matDialog.open(CreateRequestComponent, {height: '500px', hasBackdrop: false})
+      .afterClosed()
+      .subscribe(v => {
+        if(v) {
+          this.requestsS.addRequest(v)
+          this.requests$ = this.requestsS.get$();
+          this.cdr.detectChanges();
+        }
+      });
   }
 
-  protected openRequestPage(id: number | undefined) {
+  protected openRequestPage(id: string | undefined) {
     this.router.navigate([id], {relativeTo: this.route});
   }
-
-
 }

@@ -1,0 +1,55 @@
+<div class="wrapper" *ngLet="profile$ | async as profile">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title>{{profile | executorFullName}}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip-listbox aria-label="Dog selection">
+            <mat-chip *ngFor="let specialization of profile?.specialization">
+              {{specialization.name}}
+            </mat-chip>
+          </mat-chip-listbox>
+        </mat-card-subtitle>
+        <div>
+          <img mat-card-lg-image src="assets/img/default/staff.jpg" >
+          <div>
+            <img style="margin-right: 5px" width="25px" height="25px" *ngFor="let _ of [].constructor(5)" src="/assets/img/default/star.png">
+          </div>
+          <div>
+           <button mat-flat-button (click)="openChat(profile?.id)">Открыть чат</button>
+          </div>
+        </div>
+      </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
+      <div style="font-size: 16px; position: relative; bottom: 80px">
+        <p (click) = "navigateToCompany(profile?.company?.id)"><span>Компания:</span> <a style="text-decoration: underline; color: cornflowerblue; cursor: pointer">{{profile?.company?.name}}</a></p>
+        <p><span>Телефон:</span> {{profile?.phoneNumber}}</p>
+        <p><span> Почта: </span>{{profile?.email}}</p>
+        <p style="width: 600px; margin-top: 20px; height: 80px"><span>О себе:</span> Занимаюсь разработкой на 1C с 2016 года, за это время успел пройти путь от Junior до Senior-разработчика.
+          Имеется опыт разворачивание системы с нуля. Помимо навыков работы в 1C также имеются базовые познания в FullStack-разработке</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <h2 style="text-align: center; margin-top: 30px">Отзывы</h2>
+  <section>
+    <div *ngFor="let review of reviews" style="margin-bottom: 15px">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{review.reviewerName}}</mat-card-title>
+          <mat-card-subtitle>
+            <img width="15px" height="15px" *ngFor="let _ of [].constructor(review.rate)" src="/assets/img/default/star.png">
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content style="margin-top: 20px;">
+          <div>
+            <img width="100px" height="100px" src="assets/img/default/staff.jpg">
+          </div>
+          {{review.text}}
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+</div>
